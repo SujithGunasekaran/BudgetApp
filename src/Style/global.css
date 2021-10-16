@@ -1,0 +1,37 @@
+
+:root {
+
+    --body-bg : #23272B;
+    --form-input-bg : #2E3439;
+    --form-input-border : #2E3439;
+    --form-focus-border : #FF851A;
+
+    --btn-highlight-bg : #ff9b44;
+    --btn-highlight-hover-bg : #FF851A;
+
+    --card-border : rgba(255,255,255,0.1);
+
+    --title-light : #ebecf1;
+    --title-heading : #abb6be;
+    --title-sub-heading : #97a0a8;
+    --form-input-text :#bec6ca;
+
+    --font-family-inter-font : 'Inter', sans-serif;
+    --font-family-sans-serif: "BlinkMacSystemFont","Segoe UI","Roboto","Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    --font-family-monospace: "Liberation Mono","SFMono-Regular","Menlo,Monaco","Consolas","Courier New",monospace;
+
+}
+
+.body
+{
+    width: 100%;
+}
+
+.body-main
+{
+    padding: 15px;
+    background-color: var(--body-bg);
+    min-height: 100vh;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
