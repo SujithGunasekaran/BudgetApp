@@ -4,13 +4,30 @@
     --body-bg : #23272B;
     --form-input-bg : #2E3439;
     --form-input-border : #2E3439;
-    --form-focus-border : #FF851A;
+    --form-focus-border : #00C5FB;
 
-    --btn-highlight-bg : #ff9b44;
-    --btn-highlight-hover-bg : #FF851A;
+    --icon-bg : #d2edf5;
+    --icon-color : #03aedd;
+
+    --btn-highlight-bg : #00C5FB;
+    --btn-highlight-hover-bg : #05aedd;
+
+    --danger-alert-text : #ff5a4e;
+    --danger-alert-bg : rgba(248,81,73,0.1);
+    --danger-alert-border : rgba(248,81,73,0.4);
+    --success-alert-text : #4cbb59;
+    --success-alert-bg : rgba(46,160,67,0.1);
+    --success-alert-border : rgb(52, 180, 76);
+    --info-alert-text : #17a2b8;
+    --info-alert-border : #17a2b8;
+    --info-alert-bg : rgba(6, 144, 199, 0.1);
+    --warning-alert-text : #ffc107;
+    --warning-alert-border : #ffc107;
+    --warning-alert-bg : rgba(186, 199, 6, 0.1);
 
     --card-border : rgba(255,255,255,0.1);
 
+    --title-highlight : #00C5FB;
     --title-light : #ebecf1;
     --title-heading : #abb6be;
     --title-sub-heading : #97a0a8;
@@ -25,12 +42,12 @@
 .body
 {
     width: 100%;
+    background-color: var(--body-bg);
 }
 
 .body-main
 {
-    padding: 15px;
-    background-color: var(--body-bg);
+    padding: 15px 5px;
     min-height: 100vh;
 }
 
