@@ -3,6 +3,7 @@ import Routes from './Routes';
 import './Style/global.css';
 import './Style/Login.css';
 import './Style/Header.css';
+import './Style/Finance.css';
 
 const App: FC = () => {
 

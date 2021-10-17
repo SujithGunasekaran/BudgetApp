@@ -1,23 +1,22 @@
-import React, { FC, Fragment, lazy, Suspense } from 'react';
+import React, { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Header from '../Components/Header';
 
-const Header = lazy(() => import('../Components/Header'));
 const Login = lazy(() => import('../Pages/Login'));
 const Home = lazy(() => import('../Pages/Home'));
-
+const Finance = lazy(() => import('../Pages/Finance'));
 
 const Routes: FC = () => {
 
     return (
         <BrowserRouter>
+            <Header />
             <div className="body-main">
                 <Switch>
                     <Suspense fallback={<div>Loading...</div>}>
                         <Route path='/' exact component={Login} />
-                        <Fragment>
-                            <Header />
-                            <Route path='/home' exact component={Home} />
-                        </Fragment>
+                        <Route path='/home' exact component={Home} />
+                        <Route path='/finance' exact component={Finance} />
                     </Suspense>
                 </Switch>
             </div>

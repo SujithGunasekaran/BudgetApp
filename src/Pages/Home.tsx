@@ -5,7 +5,7 @@ const Home: FC = () => {
 
     return (
         <Fragment>
-            Home Component
+            Home Page
         </Fragment>
     )
 
