@@ -1,5 +1,7 @@
-import React, { FC, Fragment, useEffect } from 'react';
+import React, { FC, Fragment, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../Icon';
+import { transactionType, transactionOptions } from '../../Util/DropdownInfo';
+import useForm from '../../Hooks/useForm';
 
 type TransactionModelProps = {
     handleTransactionView: (value: boolean) => void
@@ -10,18 +12,29 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
     // props
     const { handleTransactionView } = props;
 
-    useEffect(() => {
+    // hooks
+    const { formValue, handleFormValueWithEvent, handleFormValueWithParams } = useForm();
 
-        let customDopdown = document.querySelector('#custom-dropdown');
-        let customDopdownList = document.querySelector('#custom-dropdown-list');
-        if (customDopdown) {
-            customDopdown.addEventListener('click', function () {
-                if (customDopdownList && !customDopdownList.classList.contains('show')) customDopdownList.classList.add('show');
-                else if (customDopdownList && customDopdownList.classList.contains('show')) customDopdownList.classList.remove('show');
-            })
+    // ref
+    const transactionTypeRef = useRef(null);
+    const transactionCategoryRef = useRef(null);
+
+
+    const handleCustomDropDown = (refObject: { [key: string]: any }) => {
+        if (refObject) {
+            if (refObject.current.classList.contains('show')) refObject.current.classList.remove('show');
+            else refObject.current.classList.add('show');
         }
 
-    }, [])
+    }
+
+    const handleCustomDropDownValue = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, parenRef: { [key: string]: any }) => {
+        if (e !== null && e.target instanceof HTMLElement) {
+            const element = e.target;
+            handleFormValueWithParams(element.dataset.name, element.dataset.value, element.dataset.clearkey);
+            handleCustomDropDown(parenRef);
+        }
+    }
 
     return (
         <Fragment>
@@ -34,18 +47,57 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                     />
                 </div>
                 <form style={{ margin: '30px 0px 15px 0px' }}>
-                    <div className='model_custom_dropdown_container' id="custom-dropdown">
-                        <div className="model_custom_dropdown_value">Value</div>
+                    <div className='model_custom_dropdown_container' onClick={() => handleCustomDropDown(transactionTypeRef)}>
+                        <input
+                            className="model_custom_dropdown_value"
+                            placeholder="Select TransactionType"
+                            readOnly
+                            value={formValue?.transactiontype ?? ''}
+                        />
                         <DropDownIcon cssClass="model_custom_dropdown_icon" />
                     </div>
-                    <div className="model_custom_dopdown_list" id="custom-dropdown-list">
-                        <div className="model_custom_dropdown_item">Income</div>
-                        <div className="model_custom_dropdown_item">Expenses</div>
-                        <div className="model_custom_dropdown_item">Investment</div>
+                    <div className="model_custom_dopdown_list" ref={transactionTypeRef}>
+                        {
+                            transactionType.map((transactionInfo, index) => (
+                                <div key={index} onClick={(e) => handleCustomDropDownValue(e, transactionTypeRef)} data-value={transactionInfo.value} data-name="transactiontype" data-clearkey="transactionCategory" className="model_custom_dropdown_item">{transactionInfo.displayValue}</div>
+                            ))
+                        }
                     </div>
+                    {
+                        transactionOptions[formValue.transactiontype] &&
+                        <Fragment>
+                            <div className='model_custom_dropdown_container' onClick={() => handleCustomDropDown(transactionCategoryRef)}>
+                                <input
+                                    className="model_custom_dropdown_value"
+                                    placeholder="Select Transaction Categories"
+                                    readOnly
+                                    value={formValue?.transactionCategory ?? ''}
+                                />
+                                <DropDownIcon cssClass="model_custom_dropdown_icon" />
+                            </div>
+                            <div className="model_custom_dopdown_list" ref={transactionCategoryRef}>
+                                {
+                                    transactionOptions[formValue.transactiontype] &&
+                                    transactionOptions[formValue.transactiontype].map((optionInfo: any, index: number) => (
+                                        <div key={index} onClick={(e) => handleCustomDropDownValue(e, transactionCategoryRef)} data-value={optionInfo.value} data-clearkey={undefined} data-name="transactionCategory" className="model_custom_dropdown_item">{optionInfo.displayValue}</div>
+                                    ))
+                                }
+                            </div>
+                        </Fragment>
+                    }
+                    <input
+                        className="model_form_input"
+                        placeholder="Enter Description"
+                        name="description"
+                        onChange={handleFormValueWithEvent}
+                        value={formValue?.description ?? ''}
+                    />
                     <input
                         className="model_form_input"
                         placeholder="Enter Amount"
+                        name="amount"
+                        onChange={handleFormValueWithEvent}
+                        value={formValue?.amount ?? ''}
                     />
                     <button type="submit" className="model_form_btn">Add Transaction</button>
                 </form>
