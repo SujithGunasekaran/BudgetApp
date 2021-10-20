@@ -2,6 +2,8 @@ import React, { FC, Fragment, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../Icon';
 import { transactionType, transactionOptions } from '../../Util/DropdownInfo';
 import useForm from '../../Hooks/useForm';
+import { RootState } from '../../ReduxStore/Reducers';
+import { useDispatch, useSelector } from 'react-redux';
 
 type TransactionModelProps = {
     handleTransactionView: (value: boolean) => void
@@ -14,6 +16,12 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
 
     // hooks
     const { formValue, handleFormValueWithEvent, handleFormValueWithParams } = useForm();
+
+    // redux-state
+    const { transactionData } = useSelector((state: RootState) => state.transactionReducer);
+
+    // dispatch
+    const dispatch = useDispatch();
 
     // ref
     const transactionTypeRef = useRef(null);
@@ -36,6 +44,19 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
         }
     }
 
+    const handleFormSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const todaysDate = new Date();
+        dispatch({
+            type: 'SET_TRANSACTION',
+            value: {
+                month: `${todaysDate.getMonth()}`,
+                date: `${todaysDate.getDate()}`,
+                transactionInput: formValue
+            }
+        });
+    }
+
     return (
         <Fragment>
             <div className="model_container">
@@ -46,7 +67,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         cssClass="model_header_icon"
                     />
                 </div>
-                <form style={{ margin: '30px 0px 15px 0px' }}>
+                <form onSubmit={handleFormSubmit} style={{ margin: '30px 0px 15px 0px' }}>
                     <div className='model_custom_dropdown_container' onClick={() => handleCustomDropDown(transactionTypeRef)}>
                         <input
                             className="model_custom_dropdown_value"
