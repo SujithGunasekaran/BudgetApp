@@ -2,15 +2,16 @@ import React, { FC, Fragment, useState } from 'react';
 import useForm from '../Hooks/useForm';
 import useLoader from '../Hooks/useLoader';
 import { Link } from 'react-router-dom';
-import { userAxios } from '../Util/Api';
 import { formValidation } from '../Util';
+import { userAxios } from '../Util/Api';
 import ErrorMessage from '../UI/Messages/ErrorMessage';
+import SuccessMessage from '../UI/Messages/SuccessMessage';
 
-
-const Login: FC = () => {
+const Signup: FC = () => {
 
     // react-state
-    const [loginError, setLoginError] = useState<string | null>(null);
+    const [signupError, setSignupError] = useState<string | null>('');
+    const [signupSuccess, setSignupSuccess] = useState<string | null>('');
 
     // hooks
     const { formValue, formError, setFormError, handleFormValueWithEvent } = useForm();
@@ -18,16 +19,18 @@ const Login: FC = () => {
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const isFormValid = formValidation(['username', 'password'], formValue, setFormError);
+        const isFormValid = formValidation(['username', 'email', 'password'], formValue, setFormError);
         if (isFormValid) {
             setLoader(true);
             try {
-                const response = await userAxios.post(`/login?username=${formValue.username}&password=${formValue.password}`);
-                console.log(response);
+                const response: any = await userAxios.post(`/register`, formValue);
+                if (response.data && response.data.status === 'Success') {
+                    setSignupSuccess(response.data.message);
+                }
             }
             catch (err: any) {
                 if (err.response.data) {
-                    setLoginError(err.response.data.message);
+                    setSignupError(err.response.data.message);
                 }
             }
             finally {
@@ -36,16 +39,29 @@ const Login: FC = () => {
         }
     }
 
-    const closeModel = () => {
-        setLoginError(null);
+    const closeSuccessModel = () => {
+        setSignupSuccess(null);
+    }
+
+    const closeErrorModel = () => {
+        setSignupError(null);
     }
 
 
-    const renderErrorMessage = () => (
-        <ErrorMessage
-            message={loginError}
-            handleMessageModel={closeModel}
+    const renderSuccessMessage = () => (
+        <SuccessMessage
+            message={signupSuccess}
+            handleMessageModel={closeSuccessModel}
         />
+    )
+
+    const renderErrorMessage = () => (
+        <Fragment>
+            <ErrorMessage
+                message={signupError}
+                handleMessageModel={closeErrorModel}
+            />
+        </Fragment>
     )
 
     return (
@@ -59,9 +75,12 @@ const Login: FC = () => {
                                 <div className="form_app_name">Budget Tracker</div>
                             </div>
                             <div className="form_app_card_container">
-                                <div className="form_app_card_heading">Login</div>
+                                <div className="form_app_card_heading">Create Account</div>
                                 {
-                                    loginError && renderErrorMessage()
+                                    signupError && renderErrorMessage()
+                                }
+                                {
+                                    signupSuccess && renderSuccessMessage()
                                 }
                                 <form onSubmit={handleFormSubmit}>
                                     <input
@@ -69,12 +88,24 @@ const Login: FC = () => {
                                         className="form_app_card_form_input"
                                         placeholder="userName"
                                         name="username"
-                                        value={formValue.username || ''}
+                                        value={formValue?.username ?? ''}
                                         onChange={handleFormValueWithEvent}
                                     />
                                     {
                                         formError.usernameError &&
                                         <div className="form_app_card_error_message">{formError.usernameError}</div>
+                                    }
+                                    <input
+                                        type="text"
+                                        className="form_app_card_form_input"
+                                        placeholder="Email Address"
+                                        name="email"
+                                        value={formValue?.email ?? ''}
+                                        onChange={handleFormValueWithEvent}
+                                    />
+                                    {
+                                        formError.emailError &&
+                                        <div className="form_app_card_error_message">{formError.emailError}</div>
                                     }
                                     <input
                                         type="password"
@@ -88,16 +119,15 @@ const Login: FC = () => {
                                         formError.passwordError &&
                                         <div className="form_app_card_error_message">{formError.passwordError}</div>
                                     }
-                                    <Link className="form_app_card_forgot_password" to="/">Forgot Password</Link>
                                     <button disabled={loader ? true : false} type="submit" className="form_app_card_form_btn">
                                         {
-                                            !loader ? 'Sign In' :
+                                            !loader ? 'Create Account' :
                                                 <div className="spinner-border" role="status">
                                                 </div>
                                         }
                                     </button>
                                     <div className="form_app_card_info_link">
-                                        Don't have an account ? <Link to='/createAccount'>SignUp</Link>
+                                        Already have an account ? <Link to='/'>Sign In</Link>
                                     </div>
                                 </form>
                             </div>
@@ -114,4 +144,4 @@ const Login: FC = () => {
 };
 
 
-export default Login;
+export default Signup;

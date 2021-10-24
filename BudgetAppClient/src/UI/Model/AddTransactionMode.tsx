@@ -6,7 +6,7 @@ import { RootState } from '../../ReduxStore/Reducers';
 import { useDispatch, useSelector } from 'react-redux';
 
 type TransactionModelProps = {
-    handleTransactionView: (value: boolean) => void
+    handleTransactionView: (value?: boolean) => void
 }
 
 const AddTransactionModel: FC<TransactionModelProps> = (props) => {
