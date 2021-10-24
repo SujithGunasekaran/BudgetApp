@@ -1,30 +1,34 @@
 
-.login_main_container
+.form_main_container
 {
     margin: 20px 0px;
 }
-.login_app_info_container
+.form_main_container a
+{
+    text-decoration: none;
+}
+.form_app_info_container
 {
     padding: 25px 0px 25px 15px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.login_app_logo
+.form_app_logo
 {
     width: 45px;
     height: 45px;
 }
-.login_app_name
+.form_app_name
 {
     margin-left: 15px;
     color: var(--title-heading);
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: var(--font-family-inter-font);
     letter-spacing: 0.003rem;
 }
-.login_app_card_container
+.form_app_card_container
 {
     margin: 20px 0px;
     border-radius: 15px;
@@ -33,12 +37,11 @@
     width: 100%;
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    backdrop-filter: blur(10px);
     box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
     -webkit-box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
     -moz-box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
 }
-.login_app_card_heading
+.form_app_card_heading
 {
     padding: 10px 0px 10px 0px;
     text-align: center;
@@ -47,9 +50,9 @@
     font-weight: 700;
     font-family: var(--font-family-sans-serif);
 }
-.login_app_card_form_input
+.form_app_card_form_input
 {
-    margin-top: 25px;
+    margin: 15px 0px 15px 0px;
     width: 100%;
     height: 45px;
     padding: 8px 8px;
@@ -62,19 +65,31 @@
     background-color: var(--form-input-bg);
     transition: 0.4s all ease-in-out;
 }
-.login_app_card_form_input::placeholder
+.form_app_card_form_input::placeholder
 {
     font-size: .9rem;
     font-weight: 400;
+    color: var(--form-text-placeholder);
 }
-.login_app_card_form_input:focus
+.form_app_card_form_input:focus
 {
     outline: none;
     border: 1px solid var(--form-focus-border);
 }
-.login_app_card_form_btn
+.form_app_card_forgot_password
 {
-    margin: 30px 0px 20px 0px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 0px 15px 0px;
+    font-family: var(--font-family-sans-serif);
+    font-weight: 500;
+    font-size: 0.905rem;
+    color: var(--text-highlight-dark);
+    transition: 0.4s all ease-in-out;
+}
+.form_app_card_form_btn
+{
+    margin: 20px 0px 20px 0px;
     padding: 10px 0px;
     border: none;
     width: 100%;
@@ -84,9 +99,40 @@
     font-weight: 500;
     color: var(--text-light);
     background-color: var(--btn-highlight-bg);
-    transition: 0.4s all ease-in-out;
 }
-.login_app_card_form_btn:hover
+.form_app_card_form_btn:disabled
 {
+    background-color: var(--btn-disabled-bg);
+}
+.form_app_card_form_btn:hover
+{
+    transition: 0.4s all ease-in-out;
     background-color: var(--btn-highlight-hover-bg);
+}
+.form_app_card_form_btn .spinner-border
+{
+    width: 1.3rem;
+    height: 1.3rem;
+}
+.form_app_card_info_link
+{
+    padding: 15px 0px 20px 0px;
+    text-align: center;
+    color: var(--text-highlight-dark);
+    font-size: 0.910rem;
+    font-weight: 500;
+    font-family: var(--font-family-sans-serif);
+}
+.form_app_card_info_link a
+{
+    color: var(--text-highlight-dark);
+}
+.form_app_card_error_message
+{
+    padding-left: 4px;
+    color: var(--danger-alert-text);
+    font-size: .890rem;
+    font-weight: 500;
+    letter-spacing: 0.005rem;
+    font-family: var(--font-family-sans-serif);
 }

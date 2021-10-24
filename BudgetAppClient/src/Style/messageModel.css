@@ -1,0 +1,53 @@
+
+/* error message model */
+
+.message_container
+{
+    width: 100%;
+    margin: 15px 0px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-radius: 7px;
+}
+.message_text
+{
+    font-size: .9rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    font-family: var(--font-family-sans-serif);
+}
+.message_cancel
+{
+    width: 15px;
+    height: 15px;
+    margin-left: auto;
+    cursor: pointer;
+}
+.message_container.error
+{
+    background-color: var(--danger-alert-bg);
+    border: 1px solid var(--danger-alert-border);
+}
+.message_text.error
+{
+    color: var(--danger-alert-text);
+}
+
+.message_cancel.error
+{
+    color: var(--danger-alert-text); 
+}
+.message_container.success
+{
+    background-color: var(--success-alert-bg);
+    border: 1px solid var(--success-alert-border);
+}
+.message_text.success
+{
+    color: var(--success-alert-text);
+}
+.message_cancel.success
+{
+    color: var(--success-alert-text); 
+}

@@ -1,21 +1,47 @@
 
 :root {
 
-    --body-bg : #23272B;
+    /* Light theme */
+
+    --body-bg : #EFF1F5;
+    --form-input-bg : #FFFFFF;
+    --form-input-border : #e3e3e3;
+    --form-focus-border : #00C5FB;
+    --form-input-text :#2f3030;
+    --form-text-placeholder : #717172;
+    --btn-highlight-bg : #059ec9;
+    --btn-highlight-hover-bg : #05aedd;
+    --btn-disabled-bg : #8b8b8d;
+    --text-highlight-dark : #069cc5;
+    --title-dark : #4d4d4d;
+    --title-heading : #242323;
+    --card-bg : #FFFFFF;
+    --card-border : #e3e3e3;
+
+    /* Dark Theme */
+
+    /* --body-bg : #23272B;
     --form-input-bg : #2E3439;
     --form-input-border : #2E3439;
     --form-focus-border : #00C5FB;
-
     --icon-bg : #d2edf5;
     --icon-color : #03aedd;
-
+    --icon-dark-color : #929699;
     --scroll-border : #abb6be;
-
     --dropdown-values-bg : #d2edf5;
     --dropdown-values-color : #03aedd;
-
     --btn-highlight-bg : #059ec9;
     --btn-highlight-hover-bg : #05aedd;
+    --card-bg : #23272B;
+    --card-border : rgba(255,255,255,0.1);
+    --title-highlight : #00C5FB;
+    --title-light : #ebecf1;
+    --title-heading : #abb6be;
+    --title-sub-heading : #97a0a8;
+    --form-input-text :#bec6ca;
+    --form-text-placeholder : #7d7e80; */
+
+
 
     --danger-alert-text : #ff5a4e;
     --danger-alert-bg : rgba(248,81,73,0.1);
@@ -30,17 +56,10 @@
     --warning-alert-border : #ffc107;
     --warning-alert-bg : rgba(186, 199, 6, 0.1);
 
-    --card-bg : #23272B;
-    --card-border : rgba(255,255,255,0.1);
 
-    --icon-dark-color : #929699;
 
-    --title-highlight : #00C5FB;
-    --title-light : #ebecf1;
-    --title-heading : #abb6be;
-    --title-sub-heading : #97a0a8;
-    --form-input-text :#bec6ca;
-    --form-text-placeholder : #7d7e80;
+
+    
 
     --font-family-inter-font : 'Inter', sans-serif;
     --font-family-sans-serif: "BlinkMacSystemFont","Segoe UI","Roboto","Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
