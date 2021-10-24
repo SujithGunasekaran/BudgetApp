@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import userModel from "../mongodb/model/useModel";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { config } from '../config';
 
 export const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
     try {
         const userInfo = await userModel.findOne({ username });
-        if (userInfo) throw new Error('User already exists');
+        if (userInfo) throw new Error('Username already exists');
         const hasedValue = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, hasedValue);
         const savedUser = await userModel.create({ username, email, password: encryptedPassword });
@@ -29,13 +31,20 @@ export const loginUser = async (req: Request, res: Response) => {
     const queryData: any = req.query;
     const { username, password } = queryData;
     try {
-        const isUserNameRegistered = await userModel.findOne({ username });
-        if (!isUserNameRegistered) throw new Error('Invalid Username');
-        const isPasswordMatched = await bcrypt.compare(password, isUserNameRegistered.password);
+        const userInfo = await userModel.findOne({ username });
+        if (!userInfo) throw new Error('Invalid Username');
+        const isPasswordMatched = await bcrypt.compare(password, userInfo.password);
         if (!isPasswordMatched) throw new Error('Invalid Password');
+        const token = jwt.sign({ id: userInfo._id }, `${config.JWTSECRET}`, { expiresIn: '7d' });
+        if (!token) throw new Error('Error while getting token');
         res.status(200).json({
-            status: 200,
-            message: 'Success'
+            status: 'Success',
+            token,
+            userInfo: {
+                id: userInfo._id,
+                email: userInfo.email,
+                userName: userInfo.username
+            }
         })
     }
     catch (err: any) {

@@ -16,9 +16,8 @@ server.use(express.json());
 
 // restrict response header
 server.use(cors({
-    origin: `${LOCAL_URL}`,
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'x-powered-token']
 }));
 
 // mongodb connection
