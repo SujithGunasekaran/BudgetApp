@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Header from '../Components/Header';
 
 const Login = lazy(() => import('../Pages/Login'));
+const Sinup = lazy(() => import('../Pages/Signup'));
 const Home = lazy(() => import('../Pages/Home'));
 const Finance = lazy(() => import('../Pages/Finance'));
 
@@ -15,6 +16,7 @@ const Routes: FC = () => {
                 <Switch>
                     <Suspense fallback={<div>Loading...</div>}>
                         <Route path='/' exact component={Login} />
+                        <Route path='/createAccount' exact component={Sinup} />
                         <Route path='/home' exact component={Home} />
                         <Route path='/finance' exact component={Finance} />
                     </Suspense>

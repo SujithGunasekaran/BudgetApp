@@ -8,9 +8,9 @@ const IconHeader: FC = () => {
     const [transactionView, setTransactionView] = useState<Boolean>(false);
     const [calculatorView, setCalculatorView] = useState<Boolean>(false);
 
-    const handleTransactionView = (value: Boolean) => {
+    const handleTransactionView = (value?: boolean | undefined) => {
         setCalculatorView(false);
-        setTransactionView(value);
+        if (value) setTransactionView(value);
     }
 
     const handleCalCulatorView = (value: Boolean) => {

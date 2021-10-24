@@ -22,7 +22,7 @@ const Header: FC<HeaderProps> = (props) => {
     return (
         <Fragment>
             {
-                location.pathname !== '/' &&
+                (location.pathname !== '/' && location.pathname !== '/createAccount') &&
                 <div className="header_main_container">
                     <div className="header_logo_info_container">
                         <img src='/Budget_icon_512.png' className="header_logo" alt="Budget_logo" />

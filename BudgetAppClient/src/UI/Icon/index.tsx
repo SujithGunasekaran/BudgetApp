@@ -5,7 +5,7 @@ type IconProps = {
 
 type IconWithFunProps = {
     cssClass: String,
-    handleEvent: (value: boolean) => void
+    handleEvent: (value?: boolean) => void
 }
 
 export const PersonIcon = (input: IconProps) => (
