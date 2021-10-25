@@ -1,8 +1,38 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import userModel from "../mongodb/model/useModel";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
+
+
+export const checkIsUserTokenValid = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.headers['x-powered-token'] && config.JWTSECRET) {
+            const token: any = req.headers['x-powered-token'];
+            const decode: any = jwt.verify(token, config.JWTSECRET);
+            if (!decode) throw new Error('Invalid Token');
+            const { id } = decode;
+            const userInfo = await userModel.findById(id);
+            if (!userInfo) throw new Error('Something Went wrong');
+            res.status(200).json({
+                status: 'Success',
+                token,
+                userInfo: {
+                    id: userInfo._id,
+                    email: userInfo.email,
+                    userName: userInfo.username
+                }
+            });
+        }
+    }
+    catch (err) {
+        res.status(404).json({
+            status: "Error",
+            message: 'Invalid Token'
+        });
+    }
+}
+
 
 export const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
