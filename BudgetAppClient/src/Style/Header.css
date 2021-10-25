@@ -4,9 +4,9 @@
     padding: 15px 15px;
     color: white;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: var(--body-bg);
+    background-color: var(--header-bg);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
 }
 .header_main_container a
 {
@@ -25,10 +25,10 @@
 .header_logo_name
 {
     margin-left: 10px;
-    font-size: .950rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--title-heading);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-modern);
 }
 
 /* Header menu list */
@@ -37,10 +37,13 @@
 {
     display: flex;
     align-items: center;
+    margin-left: 20px;
 }
 .header_menu_item
 {
-    padding: 0px 12px;
+    margin: 0px 9px;
+    padding: 5px 12px;
+    border-radius: 5px;
     color: var(--title-sub-heading);
     font-size: .950rem;
     font-weight: 600;
@@ -50,6 +53,7 @@
 .header_menu_item.active
 {
     color: var(--title-highlight);
+    background-color: var(--text-bg);
 }
 .header_menu_item:hover
 {
@@ -61,8 +65,10 @@
 
 .header_user_info_container
 {
+    position: relative;
     display: flex;
     align-items: center;
+    margin-left: auto;
 }
 .header_user_info_logo_bg
 {
@@ -70,6 +76,7 @@
     height: 35px;
     border-radius: 50%;
     background-color: var(--icon-bg);
+    cursor: pointer;
 }
 .header_user_info_logo
 {
@@ -85,4 +92,51 @@
     font-weight: 600;
     color: var(--title-heading);
     font-family: var(--font-family-sans-serif);
+    cursor: pointer;
+}
+
+.header_user_model
+{
+    display: none;
+    position: absolute;
+    padding: 10px 15px;
+    border-radius: 7px;
+    right: 0px;
+    top: calc(100% + 20px);
+    background-color: var(--card-bg-grey);
+    box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
+}
+.header_user_model.show
+{
+    display: block;
+}
+.header_user_model_item
+{
+    display: flex;
+    align-items: center;
+    padding: 8px 13px;
+    margin: 6px 0px;
+    transition: 0.4s all ease-in-out;
+    cursor: pointer;
+}
+.header_user_model_item:hover > .header_user_model_name,
+.header_user_model_item:hover > .header_user_model_icon
+{
+    color: var(--text-highlight-dark);
+}
+.header_user_model_icon
+{
+    width: 20px;
+    height: 20px;
+    color: var(--icon-color);
+    transition: 0.4s all ease-in-out;
+}
+.header_user_model_name
+{
+    margin-left: 8px;
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--title-heading);
+    font-family: var(--font-family-sans-serif);
+    transition: 0.4s all ease-in-out;
 }

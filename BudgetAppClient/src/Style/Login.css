@@ -1,7 +1,7 @@
 
 .form_main_container
 {
-    margin: 20px 0px;
+    margin: 20px 0px;  
 }
 .form_main_container a
 {
@@ -25,14 +25,14 @@
     color: var(--title-heading);
     font-size: 1.5rem;
     font-weight: 700;
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-modern);
     letter-spacing: 0.003rem;
 }
 .form_app_card_container
 {
     margin: 20px 0px;
-    border-radius: 15px;
-    padding: 15px 15px;
+    border-radius: 5px;
+    padding: 32px 40px;
     color: #fff;
     width: 100%;
     background-color: var(--card-bg);
@@ -43,12 +43,12 @@
 }
 .form_app_card_heading
 {
-    padding: 10px 0px 10px 0px;
+    padding: 10px 0px 15px 0px;
     text-align: center;
     color: var(--title-dark);
-    font-size: 1.4rem;
-    font-weight: 700;
-    font-family: var(--font-family-sans-serif);
+    font-size: .950rem;
+    font-weight: 500;
+    font-family: var(--font-family-modern);
 }
 .form_app_card_form_input
 {
@@ -56,12 +56,12 @@
     width: 100%;
     height: 45px;
     padding: 8px 8px;
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-modern);
     font-size: 1rem;
     font-weight: 500;
     color: var(--form-input-text);
-    border: 1px solid var(--form-input-border);
-    border-radius: 8px;
+    border: 2px solid var(--form-input-border);
+    border-radius: 5px;
     background-color: var(--form-input-bg);
     transition: 0.4s all ease-in-out;
 }
@@ -74,7 +74,7 @@
 .form_app_card_form_input:focus
 {
     outline: none;
-    border: 1px solid var(--form-focus-border);
+    border: 2px solid var(--form-focus-border);
 }
 .form_app_card_forgot_password
 {
@@ -93,7 +93,7 @@
     padding: 10px 0px;
     border: none;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 5px;
     font-family: var(--font-family-sans-serif);
     font-size: .980rem;
     font-weight: 500;
@@ -119,7 +119,7 @@
     padding: 15px 0px 20px 0px;
     text-align: center;
     color: var(--text-highlight-dark);
-    font-size: 0.910rem;
+    font-size: 0.900rem;
     font-weight: 500;
     font-family: var(--font-family-sans-serif);
 }
