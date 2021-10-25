@@ -10,7 +10,7 @@ const IconHeader: FC = () => {
 
     const handleTransactionView = (value?: boolean | undefined) => {
         setCalculatorView(false);
-        if (value) setTransactionView(value);
+        if (value !== undefined) setTransactionView(value);
     }
 
     const handleCalCulatorView = (value: Boolean) => {

@@ -6,6 +6,7 @@ import { formValidation } from '../Util';
 import { userAxios } from '../Util/Api';
 import ErrorMessage from '../UI/Messages/ErrorMessage';
 import SuccessMessage from '../UI/Messages/SuccessMessage';
+import { Redirect } from 'react-router-dom';
 
 const Signup: FC = () => {
 
@@ -16,6 +17,9 @@ const Signup: FC = () => {
     // hooks
     const { formValue, formError, setFormError, handleFormValueWithEvent } = useForm();
     const { loader, setLoader } = useLoader();
+
+    // session-data
+    const userToken = sessionStorage.getItem('userToken');
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,82 +68,83 @@ const Signup: FC = () => {
         </Fragment>
     )
 
-    return (
-        <Fragment>
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-5 mx-auto">
-                        <div className="form_main_container">
-                            <div className="form_app_info_container">
-                                <img src="/Budget_icon_512.png" alt="BugetIcon" className="form_app_logo" />
-                                <div className="form_app_name">Budget Tracker</div>
-                            </div>
-                            <div className="form_app_card_container">
-                                <div className="form_app_card_heading">Create Account</div>
-                                {
-                                    signupError && renderErrorMessage()
-                                }
-                                {
-                                    signupSuccess && renderSuccessMessage()
-                                }
-                                <form onSubmit={handleFormSubmit}>
-                                    <input
-                                        type="text"
-                                        className="form_app_card_form_input"
-                                        placeholder="userName"
-                                        name="username"
-                                        value={formValue?.username ?? ''}
-                                        onChange={handleFormValueWithEvent}
-                                    />
+    if (!userToken) {
+        return (
+            <Fragment>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-md-4 mx-auto">
+                            <div className="form_main_container">
+                                <div className="form_app_info_container">
+                                    <img src="/Budget_icon_512.png" alt="BugetIcon" className="form_app_logo" />
+                                    <div className="form_app_name">Budget Tracker</div>
+                                </div>
+                                <div className="form_app_card_container">
+                                    <div className="form_app_card_heading">Sign up to continue</div>
                                     {
-                                        formError.usernameError &&
-                                        <div className="form_app_card_error_message">{formError.usernameError}</div>
+                                        signupError && renderErrorMessage()
                                     }
-                                    <input
-                                        type="text"
-                                        className="form_app_card_form_input"
-                                        placeholder="Email Address"
-                                        name="email"
-                                        value={formValue?.email ?? ''}
-                                        onChange={handleFormValueWithEvent}
-                                    />
                                     {
-                                        formError.emailError &&
-                                        <div className="form_app_card_error_message">{formError.emailError}</div>
+                                        signupSuccess && renderSuccessMessage()
                                     }
-                                    <input
-                                        type="password"
-                                        className="form_app_card_form_input"
-                                        placeholder="Password"
-                                        name="password"
-                                        value={formValue?.password ?? ''}
-                                        onChange={handleFormValueWithEvent}
-                                    />
-                                    {
-                                        formError.passwordError &&
-                                        <div className="form_app_card_error_message">{formError.passwordError}</div>
-                                    }
-                                    <button disabled={loader ? true : false} type="submit" className="form_app_card_form_btn">
+                                    <form onSubmit={handleFormSubmit}>
+                                        <input
+                                            type="text"
+                                            className="form_app_card_form_input"
+                                            placeholder="userName"
+                                            name="username"
+                                            value={formValue?.username ?? ''}
+                                            onChange={handleFormValueWithEvent}
+                                        />
                                         {
-                                            !loader ? 'Create Account' :
-                                                <div className="spinner-border" role="status">
-                                                </div>
+                                            formError.usernameError &&
+                                            <div className="form_app_card_error_message">{formError.usernameError}</div>
                                         }
-                                    </button>
-                                    <div className="form_app_card_info_link">
-                                        Already have an account ? <Link to='/'>Sign In</Link>
-                                    </div>
-                                </form>
+                                        <input
+                                            type="text"
+                                            className="form_app_card_form_input"
+                                            placeholder="Email Address"
+                                            name="email"
+                                            value={formValue?.email ?? ''}
+                                            onChange={handleFormValueWithEvent}
+                                        />
+                                        {
+                                            formError.emailError &&
+                                            <div className="form_app_card_error_message">{formError.emailError}</div>
+                                        }
+                                        <input
+                                            type="password"
+                                            className="form_app_card_form_input"
+                                            placeholder="Password"
+                                            name="password"
+                                            value={formValue?.password ?? ''}
+                                            onChange={handleFormValueWithEvent}
+                                        />
+                                        {
+                                            formError.passwordError &&
+                                            <div className="form_app_card_error_message">{formError.passwordError}</div>
+                                        }
+                                        <button disabled={loader ? true : false} type="submit" className="form_app_card_form_btn">
+                                            {
+                                                !loader ? 'Create Account' :
+                                                    <div className="spinner-border" role="status">
+                                                    </div>
+                                            }
+                                        </button>
+                                        <div className="form_app_card_info_link">
+                                            Already have an account ? <Link to='/'>Sign In</Link>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </Fragment>
-    )
+            </Fragment>
+        )
+    }
 
-
-
+    else return <Redirect to='/home' />
 
 };
 

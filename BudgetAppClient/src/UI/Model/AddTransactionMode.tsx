@@ -63,7 +63,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                 <div className="model_header_container">
                     <div className="model_header_name">Add Transaction</div>
                     <CancelIcon
-                        handleEvent={handleTransactionView}
+                        handleEvent={() => handleTransactionView(false)}
                         cssClass="model_header_icon"
                     />
                 </div>

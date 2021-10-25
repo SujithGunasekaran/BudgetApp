@@ -5,9 +5,14 @@ import { Link } from 'react-router-dom';
 import { userAxios } from '../Util/Api';
 import { formValidation } from '../Util';
 import ErrorMessage from '../UI/Messages/ErrorMessage';
+import { Redirect, withRouter } from 'react-router';
 
 
-const Login: FC = () => {
+type LoginProps = {
+    history: any
+}
+
+const Login: FC<LoginProps> = (props) => {
 
     // react-state
     const [loginError, setLoginError] = useState<string | null>(null);
@@ -16,14 +21,24 @@ const Login: FC = () => {
     const { formValue, formError, setFormError, handleFormValueWithEvent } = useForm();
     const { loader, setLoader } = useLoader();
 
+    // props
+    const { history } = props;
+
+    // session-storage
+    const userToken = sessionStorage.getItem('userToken');
+
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const isFormValid = formValidation(['username', 'password'], formValue, setFormError);
         if (isFormValid) {
             setLoader(true);
             try {
-                const response = await userAxios.post(`/login?username=${formValue.username}&password=${formValue.password}`);
-                console.log(response);
+                const response: any = await userAxios.post(`/login?username=${formValue.username}&password=${formValue.password}`);
+                if (response.data && response.data.status === 'Success') {
+                    const { data } = response;
+                    sessionStorage.setItem('userToken', data.token);
+                    history.push('/home');
+                }
             }
             catch (err: any) {
                 if (err.response.data) {
@@ -48,70 +63,71 @@ const Login: FC = () => {
         />
     )
 
-    return (
-        <Fragment>
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-5 mx-auto">
-                        <div className="form_main_container">
-                            <div className="form_app_info_container">
-                                <img src="/Budget_icon_512.png" alt="BugetIcon" className="form_app_logo" />
-                                <div className="form_app_name">Budget Tracker</div>
-                            </div>
-                            <div className="form_app_card_container">
-                                <div className="form_app_card_heading">Login</div>
-                                {
-                                    loginError && renderErrorMessage()
-                                }
-                                <form onSubmit={handleFormSubmit}>
-                                    <input
-                                        type="text"
-                                        className="form_app_card_form_input"
-                                        placeholder="userName"
-                                        name="username"
-                                        value={formValue.username || ''}
-                                        onChange={handleFormValueWithEvent}
-                                    />
+    if (!userToken) {
+        return (
+            <Fragment>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-md-4 mx-auto">
+                            <div className="form_main_container">
+                                <div className="form_app_info_container">
+                                    <img src="/Budget_icon_512.png" alt="BugetIcon" className="form_app_logo" />
+                                    <div className="form_app_name">Budget Tracker</div>
+                                </div>
+                                <div className="form_app_card_container">
+                                    <div className="form_app_card_heading">Login in to continue</div>
                                     {
-                                        formError.usernameError &&
-                                        <div className="form_app_card_error_message">{formError.usernameError}</div>
+                                        loginError && renderErrorMessage()
                                     }
-                                    <input
-                                        type="password"
-                                        className="form_app_card_form_input"
-                                        placeholder="Password"
-                                        name="password"
-                                        value={formValue?.password ?? ''}
-                                        onChange={handleFormValueWithEvent}
-                                    />
-                                    {
-                                        formError.passwordError &&
-                                        <div className="form_app_card_error_message">{formError.passwordError}</div>
-                                    }
-                                    <Link className="form_app_card_forgot_password" to="/">Forgot Password</Link>
-                                    <button disabled={loader ? true : false} type="submit" className="form_app_card_form_btn">
+                                    <form onSubmit={handleFormSubmit}>
+                                        <input
+                                            type="text"
+                                            className="form_app_card_form_input"
+                                            placeholder="userName"
+                                            name="username"
+                                            value={formValue.username || ''}
+                                            onChange={handleFormValueWithEvent}
+                                        />
                                         {
-                                            !loader ? 'Sign In' :
-                                                <div className="spinner-border" role="status">
-                                                </div>
+                                            formError.usernameError &&
+                                            <div className="form_app_card_error_message">{formError.usernameError}</div>
                                         }
-                                    </button>
-                                    <div className="form_app_card_info_link">
-                                        Don't have an account ? <Link to='/createAccount'>SignUp</Link>
-                                    </div>
-                                </form>
+                                        <input
+                                            type="password"
+                                            className="form_app_card_form_input"
+                                            placeholder="Password"
+                                            name="password"
+                                            value={formValue?.password ?? ''}
+                                            onChange={handleFormValueWithEvent}
+                                        />
+                                        {
+                                            formError.passwordError &&
+                                            <div className="form_app_card_error_message">{formError.passwordError}</div>
+                                        }
+                                        <Link className="form_app_card_forgot_password" to="/">Forgot Password</Link>
+                                        <button disabled={loader ? true : false} type="submit" className="form_app_card_form_btn">
+                                            {
+                                                !loader ? 'Sign In' :
+                                                    <div className="spinner-border" role="status">
+                                                    </div>
+                                            }
+                                        </button>
+                                        <div className="form_app_card_info_link">
+                                            Don't have an account ? <Link to='/createAccount'>SignUp</Link>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </Fragment>
-    )
+            </Fragment>
+        )
+    }
 
-
-
+    else return <Redirect to='/home' />
 
 };
 
 
-export default Login;
+export default withRouter(Login);

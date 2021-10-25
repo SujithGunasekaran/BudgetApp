@@ -1,8 +1,9 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { PersonIcon } from '../UI/Icon';
-import { useSelector } from 'react-redux';
+import { PersonIcon, LogoutIcon } from '../UI/Icon';
+import { userAxios } from '../Util/Api';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../ReduxStore/Reducers';
 
 type HeaderProps = {
@@ -14,10 +15,69 @@ type HeaderProps = {
 const Header: FC<HeaderProps> = (props) => {
 
     // props
-    const { location } = props;
+    const { location, history } = props;
 
-    // redux-State
-    const { userName } = useSelector((state: RootState) => state.userInfoReducer);
+    // dispatch
+    const dispatch = useDispatch();
+
+    // redux state
+    const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
+
+    // ref
+    const userModelRef = useRef<any>(null);
+
+
+    useEffect(() => {
+        checkIstokenValid();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
+    useEffect(() => {
+
+        const handleCloseUserModel = () => {
+            if (userModelRef) {
+                userModelRef.current.classList.remove('show');
+            }
+        }
+
+        document.body.addEventListener('click', handleCloseUserModel);
+
+        return () => {
+            document.body.removeEventListener('click', handleCloseUserModel);
+        }
+
+    }, [])
+
+
+    const checkIstokenValid = async () => {
+        try {
+            const response: any = await userAxios.get('/checkUser');
+            if (response.data && response.data.status === 'Success') {
+                const { data } = response;
+                dispatch({
+                    type: 'SET_USER_INFO',
+                    userInfo: data.userInfo
+                });
+            }
+        }
+        catch (err: any) {
+            if (err.response && err.response.data) {
+                if (err.response.data.message === 'Invalid Token') {
+                    sessionStorage.clear();
+                    history.push('/');
+                }
+            }
+        }
+    }
+
+    const showUserModel = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, refObject: { [key: string]: any }) => {
+        e.stopPropagation();
+        if (refObject) {
+            if (!refObject.current.classList.contains('show')) refObject.current.classList.add('show');
+            else refObject.current.classList.remove('show');
+        }
+    }
 
     return (
         <Fragment>
@@ -33,12 +93,26 @@ const Header: FC<HeaderProps> = (props) => {
                         <Link to="/finance" className={`header_menu_item ${location.pathname === '/finance' && 'active'}`}>Finance</Link>
                     </div>
                     <div className="header_user_info_container">
-                        <div className="header_user_info_logo_bg">
+                        <div className="header_user_info_name" onClick={(e) => showUserModel(e, userModelRef)}>{userInfo.userName}</div>
+                        <div className="header_user_info_logo_bg" onClick={(e) => showUserModel(e, userModelRef)}>
                             <PersonIcon
                                 cssClass="header_user_info_logo"
                             />
                         </div>
-                        <div className="header_user_info_name">{userName}</div>
+                        <div className="header_user_model" ref={userModelRef}>
+                            <div className="header_user_model_item">
+                                <PersonIcon
+                                    cssClass="header_user_model_icon"
+                                />
+                                <div className="header_user_model_name">Profile</div>
+                            </div>
+                            <div className="header_user_model_item">
+                                <LogoutIcon
+                                    cssClass="header_user_model_icon"
+                                />
+                                <div className="header_user_model_name">Logout</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             }

@@ -1,19 +1,19 @@
-import { SET_USER_NAME } from '../Types';
+import { SET_USER_INFO } from '../Types';
 
 type userReducer = {
-    userName: String | null
+    userInfo: { [key: string]: any }
 }
 
 const initialState: userReducer = {
-    userName: null
+    userInfo: {}
 }
 
 export default function userInfoReducer(state = initialState, action: { [key: string]: any }) {
     switch (action.type) {
-        case SET_USER_NAME:
+        case SET_USER_INFO:
             return {
                 ...state,
-                userName: action.userName
+                userInfo: action.userInfo
             }
         default: return state;
     }
