@@ -3,6 +3,7 @@ import cors from 'cors';
 import { connectMongodb } from './mongodb';
 import { config } from './config';
 import userRouter from './routes/userRoute';
+import transactionRouter from './routes/transactionRoute';
 
 const { LOCAL_URL } = config;
 
@@ -24,6 +25,7 @@ server.use(cors({
 connectMongodb();
 
 server.use('/api/v1/user', userRouter);
+server.use('/api/v1/transaction', transactionRouter);
 
 server.listen(PORT, () => {
     console.log(`Server Running on PORT : ${PORT}`);

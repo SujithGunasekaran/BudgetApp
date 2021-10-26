@@ -24,6 +24,7 @@ export const checkIsUserTokenValid = async (req: Request, res: Response, next: N
                 }
             });
         }
+        else throw new Error('Invalid Token');
     }
     catch (err) {
         res.status(404).json({
