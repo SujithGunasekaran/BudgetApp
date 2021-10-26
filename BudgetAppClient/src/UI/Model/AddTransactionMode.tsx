@@ -4,6 +4,7 @@ import { transactionType, transactionOptions } from '../../Util/DropdownInfo';
 import useForm from '../../Hooks/useForm';
 import { RootState } from '../../ReduxStore/Reducers';
 import { useDispatch, useSelector } from 'react-redux';
+import { formValidation } from '../../Util';
 
 type TransactionModelProps = {
     handleTransactionView: (value?: boolean) => void
@@ -15,7 +16,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
     const { handleTransactionView } = props;
 
     // hooks
-    const { formValue, handleFormValueWithEvent, handleFormValueWithParams } = useForm();
+    const { formValue, formError, handleFormValueWithEvent, handleFormValueWithParams, setFormError } = useForm();
 
     // redux-state
     const { transactionData } = useSelector((state: RootState) => state.transactionReducer);
@@ -46,15 +47,11 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const todaysDate = new Date();
-        dispatch({
-            type: 'SET_TRANSACTION',
-            value: {
-                month: `${todaysDate.getMonth()}`,
-                date: `${todaysDate.getDate()}`,
-                transactionInput: formValue
-            }
-        });
+        const isFormValid = formValidation(['transactiontype', 'transactionCategory', 'amount'], formValue, setFormError);
+        if (isFormValid) {
+            const todaysDate = new Date();
+            console.log("form value", formValue);
+        }
     }
 
     return (
@@ -77,6 +74,10 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         />
                         <DropDownIcon cssClass="model_custom_dropdown_icon" />
                     </div>
+                    {
+                        formError.transactiontypeError &&
+                        <div className="form_app_card_error_message">{formError.transactiontypeError}</div>
+                    }
                     <div className="model_custom_dopdown_list" ref={transactionTypeRef}>
                         {
                             transactionType.map((transactionInfo, index) => (
@@ -96,6 +97,10 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                                 />
                                 <DropDownIcon cssClass="model_custom_dropdown_icon" />
                             </div>
+                            {
+                                formError.transactionCategoryError &&
+                                <div className="form_app_card_error_message">{formError.transactionCategoryError}</div>
+                            }
                             <div className="model_custom_dopdown_list" ref={transactionCategoryRef}>
                                 {
                                     transactionOptions[formValue.transactiontype] &&
@@ -120,6 +125,10 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         onChange={handleFormValueWithEvent}
                         value={formValue?.amount ?? ''}
                     />
+                    {
+                        formError.amountError &&
+                        <div className="form_app_card_error_message">{formError.amountError}</div>
+                    }
                     <button type="submit" className="model_form_btn">Add Transaction</button>
                 </form>
             </div>

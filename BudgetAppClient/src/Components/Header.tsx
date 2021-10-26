@@ -28,31 +28,37 @@ const Header: FC<HeaderProps> = (props) => {
 
 
     useEffect(() => {
-        checkIstokenValid();
+        if (location.pathname !== '/' && location.pathname !== '/createAccount') {
+            checkIstokenValid();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location])
+
+
+    useEffect(() => {
+        if (location.pathname !== '/' && location.pathname !== '/createAccount') {
+            const handleCloseUserModel = () => {
+                if (userModelRef.current) {
+                    userModelRef.current.classList.remove('show');
+                }
+            }
+            document.body.addEventListener('click', handleCloseUserModel);
+            return () => {
+                document.body.removeEventListener('click', handleCloseUserModel);
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
-    useEffect(() => {
-
-        const handleCloseUserModel = () => {
-            if (userModelRef) {
-                userModelRef.current.classList.remove('show');
-            }
-        }
-
-        document.body.addEventListener('click', handleCloseUserModel);
-
-        return () => {
-            document.body.removeEventListener('click', handleCloseUserModel);
-        }
-
-    }, [])
-
-
     const checkIstokenValid = async () => {
+        const userToken = sessionStorage.getItem('userToken');
         try {
-            const response: any = await userAxios.get('/checkUser');
+            const response: any = await userAxios.get('/checkUser', {
+                headers: {
+                    'x-powered-token': userToken ? userToken : ''
+                }
+            });
             if (response.data && response.data.status === 'Success') {
                 const { data } = response;
                 dispatch({
