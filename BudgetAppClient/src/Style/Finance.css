@@ -169,9 +169,17 @@
 }
 .model_header_icon
 {
-    width: 17px;
-    height: 17px;
+    width: 35px;
+    height: 35px;
+    padding: 9px;
+    border-radius: 50%;
     cursor: pointer;
+    color: var(--icon-dark-color);
+    transition: 0.4s all ease-in-out;
+}
+.model_header_icon:hover
+{
+    background-color: var(--icon-bg);
     color: var(--icon-dark-color);
 }
 .model_form_input
@@ -183,9 +191,9 @@
     margin: 15px 0px 15px 0px;
     padding: 8px 9px;
     font-size: .950rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.010rem;
-    color: var(--title-light);
+    color: var(--title-heading);
     font-family: var(--font-family-sans-serif);
     background-color: var(--form-input-bg);
     border: 1px solid var(--form-input-border);
@@ -193,7 +201,7 @@
 }
 .model_form_input::placeholder
 {
-    font-weight: 500;
+    font-weight: 400;
     color: var(--form-text-placeholder);
 }
 .model_form_input:focus
@@ -223,19 +231,20 @@
     justify-content: space-between;
     height: 45px;
     cursor: pointer;
+    border: 2px solid var(--form-input-border);
     background-color: var(--form-input-bg);
 }
 .model_custom_dropdown_value
 {
     width: 95%;
-    height: 45px;
+    height: 41px;
     border: none;
     font-size: .950rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.010rem;
-    color: var(--title-light);
+    color: var(--title-heading);
     background-color: var(--form-input-bg);
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-sans-serif);
     cursor: pointer;
 }
 .model_custom_dropdown_value:focus
@@ -244,7 +253,7 @@
 }
 .model_custom_dropdown_value::placeholder
 {
-    font-weight: 500;
+    font-weight: 400;
     color: var(--form-text-placeholder);
 }
 .model_custom_dropdown_icon
@@ -258,6 +267,7 @@
     display: none;
     max-height: 200px;
     border-radius: 7px;
+    border: 1px solid var(--form-input-border);
     overflow-y: scroll;
     background-color: var(--form-input-bg);
 }
@@ -295,7 +305,7 @@
 {
     padding: 10px 10px;
     font-size: .930rem;
-    font-weight: 400;
+    font-weight: 500;
     color: var(--title-heading);
     font-family: var(--font-family-inter-font);
     transition: 0.4s all ease-in-out;

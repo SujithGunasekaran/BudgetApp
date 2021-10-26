@@ -99,7 +99,7 @@
 {
     display: none;
     position: absolute;
-    padding: 10px 15px;
+    /* padding: 10px 15px; */
     border-radius: 7px;
     right: 0px;
     top: calc(100% + 20px);
