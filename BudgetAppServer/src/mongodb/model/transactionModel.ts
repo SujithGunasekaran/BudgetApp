@@ -8,29 +8,29 @@ const transactionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'BudgetUserInfo'
     },
+    year: {
+        type: String
+    },
     transactionHistory: {
-        yearHistory: {
-            year: String,
-            monthHistory: [
-                {
-                    month: String,
-                    dateHistory: [
-                        {
-                            date: String,
-                            transactionList: [
-                                {
-                                    transactiontype: String,
-                                    transactionCategory: String,
-                                    description: String,
-                                    amount: String
-                                }
-                            ]
-                        }
+        monthHistory: [
+            {
+                month: String,
+                dateHistory: [
+                    {
+                        date: String,
+                        transactionList: [
+                            {
+                                transactiontype: String,
+                                transactionCategory: String,
+                                description: String,
+                                amount: String
+                            }
+                        ]
+                    }
 
-                    ]
-                }
-            ]
-        }
+                ]
+            }
+        ]
     }
 
 });

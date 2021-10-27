@@ -66,7 +66,7 @@ export const loginUser = async (req: Request, res: Response) => {
         if (!userInfo) throw new Error('Invalid Username');
         const isPasswordMatched = await bcrypt.compare(password, userInfo.password);
         if (!isPasswordMatched) throw new Error('Invalid Password');
-        const token = jwt.sign({ id: userInfo._id }, `${config.JWTSECRET}`, { expiresIn: '7d' });
+        const token = jwt.sign({ id: userInfo._id }, `${config.JWTSECRET}`, { expiresIn: '24h' });
         if (!token) throw new Error('Error while getting token');
         res.status(200).json({
             status: 'Success',

@@ -25,28 +25,26 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
     const newTransactionData = {
         userId,
+        year,
         transactionHistory: {
-            yearHistory: {
-                year,
-                monthHistory: [
-                    {
-                        month,
-                        dateHistory: [
-                            {
-                                date,
-                                transactionList: [
-                                    {
-                                        transactiontype,
-                                        transactionCategory,
-                                        amount,
-                                        description
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
+            monthHistory: [
+                {
+                    month,
+                    dateHistory: [
+                        {
+                            date,
+                            transactionList: [
+                                {
+                                    transactiontype,
+                                    transactionCategory,
+                                    amount,
+                                    description
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     };
     return newTransactionData;
@@ -63,7 +61,42 @@ export const addTransaction = async (req: Request, res: Response) => {
             res.status(200).json({
                 status: 'Success',
                 data: savedData
-            })
+            });
+            return;
+        }
+        const monthData = await TransactionModel.findOne({ userId, 'transactionHistory.monthHistory': { $elemMatch: { month } } });
+        if (monthData) {
+            const dateData = await TransactionModel.findOne({ userId, 'transactionHistory.monthHistory.dateHistory': { $elemMatch: { date } } });
+            if (dateData) {
+                const savedTransactionData = await TransactionModel.findOneAndUpdate(
+                    {
+                        userId,
+                        year
+                    },
+                    {
+                        $push: {
+                            'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
+                                transactionCategory,
+                                transactiontype,
+                                amount,
+                                description
+                            }
+                        }
+                    },
+                    {
+                        arrayFilters: [{ 'monthIndex.month': month }, { 'dateIndex.date': date }],
+                        new: true,
+                        runValidators: true
+                    }
+                );
+                if (savedTransactionData) {
+                    res.status(200).json({
+                        status: 'Success',
+                        data: savedTransactionData
+                    });
+                    return;
+                }
+            }
         }
     }
     catch (err: any) {
