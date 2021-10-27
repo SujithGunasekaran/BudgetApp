@@ -3,7 +3,7 @@
 
     /* Light theme */
 
-    --body-bg : #FFFFFF;
+    /* --body-bg : #FFFFFF;
     --header-bg : #FFFFFF;
     --form-input-bg : #FFFFFF;
     --form-input-border : #e3e3e3;
@@ -27,30 +27,35 @@
     --card-bg : #FFFFFF;
     --card-border : #e3e3e3;
     --dropdown-values-bg : rgba(3,55,133,0.1);
-    --dropdown-values-color : #033a8d;
+    --dropdown-values-color : #033a8d; */
 
     /* Dark Theme */
 
-    /* --body-bg : #23272B;
-    --form-input-bg : #2E3439;
-    --form-input-border : #2E3439;
-    --form-focus-border : #00C5FB;
-    --icon-bg : #d2edf5;
-    --icon-color : #03aedd;
+    --body-bg : #000000;
+    --header-bg : #000000;
+    --form-input-bg : #242424;
+    --form-input-border : #3B3B3B;
+    --form-focus-border : #4D9EEA;
+    --form-input-text : #fff;
+    --form-text-placeholder : #8a8f98;
+    --icon-bg : rgb(77,158,234, 0.2);
+    --icon-color : #4D9EEA;
     --icon-dark-color : #929699;
-    --scroll-border : #abb6be;
-    --dropdown-values-bg : #d2edf5;
-    --dropdown-values-color : #03aedd;
-    --btn-highlight-bg : #059ec9;
-    --btn-highlight-hover-bg : #05aedd;
-    --card-bg : #23272B;
-    --card-border : rgba(255,255,255,0.1);
-    --title-highlight : #00C5FB;
+    --btn-highlight-bg : #1D9BF0;
+    --btn-highlight-hover-bg : #3090eb;
+    --btn-disabled-bg : #8b8b8d;
+    --text-bg : #222222;
+    --text-highlight-dark : #1D9BF0;
+    --title-dark : #333333;
+    --title-heading : #9b9b9b;
+    --title-highlight : #fafafa;
     --title-light : #ebecf1;
-    --title-heading : #abb6be;
-    --title-sub-heading : #97a0a8;
-    --form-input-text :#bec6ca;
-    --form-text-placeholder : #7d7e80; */
+    --title-sub-heading : #8a8f98;
+    --card-bg-grey : #2b2b2b;
+    --card-bg : #000000;
+    --card-border : #3b3b3b;
+    --dropdown-values-bg : rgb(77,158,234, 0.2);
+    --dropdown-values-color : #1D9BF0;
 
 
 
