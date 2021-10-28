@@ -50,10 +50,100 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
     return newTransactionData;
 }
 
+const addTransactionInfoToDate = async (inputData: { [key: string]: any }, userId: any) => {
+    const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const savedTransactionData = await TransactionModel.findOneAndUpdate(
+        {
+            userId,
+            year
+        },
+        {
+            $push: {
+                'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
+                    transactionCategory,
+                    transactiontype,
+                    amount,
+                    description
+                }
+            }
+        },
+        {
+            arrayFilters: [{ 'monthIndex.month': month }, { 'dateIndex.date': date }],
+            new: true,
+            runValidators: true
+        }
+    );
+    if (!savedTransactionData) return false;
+    return true;
+}
+
+
+const createNewDateInMonth = async (inputData: { [key: string]: any }, userId: any) => {
+    const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const savedTransactionData = await TransactionModel.findOneAndUpdate(
+        {
+            userId,
+            year
+        },
+        {
+            $push: {
+                'transactionHistory.monthHistory.$[monthIndex].dateHistory': {
+                    date,
+                    transactionList: {
+                        transactionCategory,
+                        transactiontype,
+                        amount,
+                        description
+                    }
+                }
+            }
+        },
+        {
+            arrayFilters: [{ 'monthIndex.month': month }],
+            new: true,
+            runValidators: true
+        }
+    );
+    if (!savedTransactionData) return false;
+    return true;
+}
+
+const createNewMonthInYear = async (inputData: { [key: string]: any }, userId: any) => {
+    const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const savedTransactionData = await TransactionModel.findOneAndUpdate(
+        {
+            userId,
+            year
+        },
+        {
+            $push: {
+                'transactionHistory.monthHistory': {
+                    month,
+                    dateHistory: {
+                        date,
+                        transactionList: {
+                            transactionCategory,
+                            transactiontype,
+                            amount,
+                            description
+                        }
+                    }
+                }
+            }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+    if (!savedTransactionData) return false;
+    return true;
+}
+
 export const addTransaction = async (req: Request, res: Response) => {
     try {
         const { userId } = req.query;
-        const { year, month, date, transactiontype, transactionCategory, amount, description } = req.body;
+        const { year, month, date } = req.body;
         const userTransactionHistory = await TransactionModel.findOne({ userId, year });
         if (!userTransactionHistory) {
             let savedData = createNewEnrtyInTransaction(req.body, userId);
@@ -64,39 +154,51 @@ export const addTransaction = async (req: Request, res: Response) => {
             });
             return;
         }
-        const monthData = await TransactionModel.findOne({ userId, 'transactionHistory.monthHistory': { $elemMatch: { month } } });
+        const monthData = await TransactionModel.findOne({ userId, year, 'transactionHistory.monthHistory': { $elemMatch: { month } } });
         if (monthData) {
-            const dateData = await TransactionModel.findOne({ userId, 'transactionHistory.monthHistory.dateHistory': { $elemMatch: { date } } });
-            if (dateData) {
-                const savedTransactionData = await TransactionModel.findOneAndUpdate(
-                    {
-                        userId,
-                        year
-                    },
-                    {
-                        $push: {
-                            'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
-                                transactionCategory,
-                                transactiontype,
-                                amount,
-                                description
+            const dateData = await TransactionModel.findOne(
+                {
+                    userId,
+                    year,
+                    'transactionHistory.monthHistory': {
+                        $elemMatch: {
+                            month,
+                            dateHistory: {
+                                $elemMatch: {
+                                    date
+                                }
                             }
                         }
-                    },
-                    {
-                        arrayFilters: [{ 'monthIndex.month': month }, { 'dateIndex.date': date }],
-                        new: true,
-                        runValidators: true
                     }
-                );
-                if (savedTransactionData) {
-                    res.status(200).json({
-                        status: 'Success',
-                        data: savedTransactionData
-                    });
-                    return;
                 }
+            );
+            if (dateData) {
+                const isTransactionAdded = await addTransactionInfoToDate(req.body, userId);
+                if (!isTransactionAdded) throw new Error('Error while adding Transaction');
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'transaction added Successfully'
+                });
+                return;
             }
+            else {
+                const isDateAdded = await createNewDateInMonth(req.body, userId);
+                console.log("date addedd");
+                if (!isDateAdded) throw new Error('Errow while adding Transaction');
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'date added Successfully'
+                });
+                return;
+            }
+        }
+        else {
+            const isMonthAdded = await createNewMonthInYear(req.body, userId);
+            if (!isMonthAdded) throw new Error('Error while adding Transaction');
+            res.status(200).json({
+                status: 'Success',
+                message: 'month added Successfully'
+            })
         }
     }
     catch (err: any) {
