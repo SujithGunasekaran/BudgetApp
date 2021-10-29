@@ -3,6 +3,11 @@ import TransactionModel from '../mongodb/model/transactionModel';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
 
+interface objectKeys {
+    [key: string]: any
+}
+
+
 export const checkIsUserTokenValid = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (req.headers['x-powered-token'] && config.JWTSECRET) {
@@ -21,11 +26,40 @@ export const checkIsUserTokenValid = async (req: Request, res: Response, next: N
     }
 }
 
+
+const calculateTransaction = (transactionType: String, amount: String, transactionData: objectKeys) => {
+    let { income = 0, expenses = 0, investment = 0, balance = 0 } = transactionData;
+    switch (true) {
+        case transactionType === 'Income':
+            income = +income + +amount;
+            balance = +income - (+expenses + +investment);
+            break;
+        case transactionType === 'Expenses':
+            expenses = +expenses + +amount;
+            balance = +income - (+expenses + +investment);
+            break;
+        case transactionType === 'Investment':
+            investment = +investment + +amount;
+            balance = +income - (+expenses + +investment);
+            break;
+        default: null;
+    }
+    const result = {
+        income,
+        expenses,
+        investment,
+        balance
+    };
+    return result;
+}
+
 const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: any) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, {});
     const newTransactionData = {
         userId,
         year,
+        income, expenses, investment, balance,
         transactionHistory: {
             monthHistory: [
                 {
@@ -50,14 +84,19 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
     return newTransactionData;
 }
 
-const addTransactionInfoToDate = async (inputData: { [key: string]: any }, userId: any) => {
+const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
             year
         },
         {
+            income,
+            expenses,
+            investment,
+            balance,
             $push: {
                 'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
                     transactionCategory,
@@ -78,14 +117,19 @@ const addTransactionInfoToDate = async (inputData: { [key: string]: any }, userI
 }
 
 
-const createNewDateInMonth = async (inputData: { [key: string]: any }, userId: any) => {
+const createNewDateInMonth = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
             year
         },
         {
+            income,
+            expenses,
+            investment,
+            balance,
             $push: {
                 'transactionHistory.monthHistory.$[monthIndex].dateHistory': {
                     date,
@@ -108,14 +152,19 @@ const createNewDateInMonth = async (inputData: { [key: string]: any }, userId: a
     return true;
 }
 
-const createNewMonthInYear = async (inputData: { [key: string]: any }, userId: any) => {
+const createNewMonthInYear = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
+    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
             year
         },
         {
+            income,
+            expenses,
+            investment,
+            balance,
             $push: {
                 'transactionHistory.monthHistory': {
                     month,
@@ -173,7 +222,7 @@ export const addTransaction = async (req: Request, res: Response) => {
                 }
             );
             if (dateData) {
-                const isTransactionAdded = await addTransactionInfoToDate(req.body, userId);
+                const isTransactionAdded = await addTransactionInfoToDate(req.body, userId, dateData);
                 if (!isTransactionAdded) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
@@ -182,8 +231,7 @@ export const addTransaction = async (req: Request, res: Response) => {
                 return;
             }
             else {
-                const isDateAdded = await createNewDateInMonth(req.body, userId);
-                console.log("date addedd");
+                const isDateAdded = await createNewDateInMonth(req.body, userId, monthData);
                 if (!isDateAdded) throw new Error('Errow while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
@@ -193,7 +241,7 @@ export const addTransaction = async (req: Request, res: Response) => {
             }
         }
         else {
-            const isMonthAdded = await createNewMonthInYear(req.body, userId);
+            const isMonthAdded = await createNewMonthInYear(req.body, userId, userTransactionHistory);
             if (!isMonthAdded) throw new Error('Error while adding Transaction');
             res.status(200).json({
                 status: 'Success',

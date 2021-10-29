@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 
+// const moeny = {}
+
 
 const transactionSchema = new Schema({
 
@@ -9,6 +11,21 @@ const transactionSchema = new Schema({
         ref: 'BudgetUserInfo'
     },
     year: {
+        type: String
+    },
+    income: {
+        type: String,
+        default: '0'
+    },
+    expenses: {
+        type: String,
+        default: '0'
+    },
+    investment: {
+        type: String,
+        default: '0'
+    },
+    balance: {
         type: String
     },
     transactionHistory: {
