@@ -53,10 +53,11 @@
     --title-sub-heading : #8a8f98;
     --card-bg-grey : #2b2b2b;
     --card-bg : #000000;
+    --card-light-dark : #1f1e1e;
     --card-border : #3b3b3b;
     --dropdown-values-bg : rgb(77,158,234, 0.2);
     --dropdown-values-color : #1D9BF0;
-
+    --scroll-border : rgb(88, 88, 88);
 
 
     --danger-alert-text : #ff5a4e;
