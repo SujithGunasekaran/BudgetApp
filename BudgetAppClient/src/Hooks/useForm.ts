@@ -36,7 +36,16 @@ const useForm = () => {
     }
 
     const handleFormValueWithEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateFormValue(e.target.name, e.target.value);
+        let value = e.target.value;
+        if (e.target && e.target.dataset) {
+            switch (true) {
+                case e.target.dataset.remove === 'comma':
+                    value = value.replace(/,/g, '');
+                    break;
+                default: value = e.target.value;
+            }
+        }
+        updateFormValue(e.target.name, value);
         if (formError[`${e.target.name}Error`]) {
             removeKeyFromError(`${e.target.name}Error`);
         }

@@ -1,10 +1,14 @@
-import React, { FC, Fragment, useRef } from 'react';
+import React, { FC, Fragment, useRef, useState, lazy, Suspense } from 'react';
 import { CancelIcon, DropDownIcon } from '../Icon';
 import { transactionType, transactionOptions } from '../../Util/DropdownInfo';
 import useForm from '../../Hooks/useForm';
+import { formValidation, FullMonth } from '../../Util';
+import { transactionAxios } from '../../Util/Api';
 import { RootState } from '../../ReduxStore/Reducers';
-import { useDispatch, useSelector } from 'react-redux';
-import { formValidation } from '../../Util';
+import { useSelector } from 'react-redux';
+
+const SuccessMessage = lazy(() => import('../Messages/SuccessMessage'));
+const ErrorMessage = lazy(() => import('../Messages/ErrorMessage'));
 
 type TransactionModelProps = {
     handleTransactionView: (value?: boolean) => void
@@ -12,21 +16,23 @@ type TransactionModelProps = {
 
 const AddTransactionModel: FC<TransactionModelProps> = (props) => {
 
+    // state
+    const [apiSuccessMessage, setApiSuccessMessage] = useState<string | null>(null);
+    const [apiErrorMessage, setApiErrorMessage] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     // props
     const { handleTransactionView } = props;
 
     // hooks
     const { formValue, formError, handleFormValueWithEvent, handleFormValueWithParams, setFormError } = useForm();
 
-    // redux-state
-    const { transactionData } = useSelector((state: RootState) => state.transactionReducer);
-
-    // dispatch
-    const dispatch = useDispatch();
-
     // ref
     const transactionTypeRef = useRef(null);
     const transactionCategoryRef = useRef(null);
+
+    // redux-state
+    const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
 
 
     const handleCustomDropDown = (refObject: { [key: string]: any }) => {
@@ -45,14 +51,67 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
         }
     }
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const isFormValid = formValidation(['transactiontype', 'transactionCategory', 'amount'], formValue, setFormError);
         if (isFormValid) {
+            setIsLoading(true);
+            const userToken = sessionStorage.getItem('userToken');
             const todaysDate = new Date();
-            console.log("form value", formValue);
+            const year = todaysDate.getFullYear();
+            const month = FullMonth[todaysDate.getMonth()];
+            const date = todaysDate.getDate();
+            const inputData = {
+                year,
+                month,
+                date,
+                ...formValue
+            };
+            try {
+                const response: any = await transactionAxios.post(`/addTransaction?userId=${userInfo.id}`, inputData, {
+                    headers: {
+                        'x-powered-token': userToken || ''
+                    }
+                });
+                if (response && response.data && response.data.status === 'Success') {
+                    setApiSuccessMessage('Transaction Added Successfully');
+                }
+            }
+            catch (err: any) {
+                setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
+            }
+            finally {
+                setIsLoading(false);
+            }
         }
     }
+
+    const handleSuccessMessageModel = () => {
+        setApiSuccessMessage(null);
+    }
+
+    const handleErrorMessageModel = () => {
+        setApiErrorMessage(null);
+    }
+
+
+    const renderSuccessMessage = () => (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SuccessMessage
+                message={apiSuccessMessage}
+                handleMessageModel={handleSuccessMessageModel}
+            />
+        </Suspense>
+    );
+
+    const renderErrorMessage = () => (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ErrorMessage
+                message={apiErrorMessage}
+                handleMessageModel={handleErrorMessageModel}
+            />
+        </Suspense>
+    )
 
     return (
         <Fragment>
@@ -64,6 +123,12 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         cssClass="model_header_icon"
                     />
                 </div>
+                {
+                    apiSuccessMessage && renderSuccessMessage()
+                }
+                {
+                    apiErrorMessage && renderErrorMessage()
+                }
                 <form onSubmit={handleFormSubmit} style={{ margin: '30px 0px 15px 0px' }}>
                     <div className='model_custom_dropdown_container' onClick={() => handleCustomDropDown(transactionTypeRef)}>
                         <input
@@ -122,14 +187,21 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         className="model_form_input"
                         placeholder="Enter Amount"
                         name="amount"
+                        data-remove="comma"
                         onChange={handleFormValueWithEvent}
-                        value={formValue?.amount ?? ''}
+                        value={formValue.amount ? Number(formValue.amount).toLocaleString('en-IN') : ''}
                     />
                     {
                         formError.amountError &&
                         <div className="form_app_card_error_message">{formError.amountError}</div>
                     }
-                    <button type="submit" className="model_form_btn">Add Transaction</button>
+                    <button disabled={isLoading} type="submit" className="model_form_btn">
+                        {
+                            !isLoading ? 'Add transaction' :
+                                <div className="spinner-border" role="status">
+                                </div>
+                        }
+                    </button>
                 </form>
             </div>
         </Fragment>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useApiUrl } from './ApiUrl';
+import { useApiUrl, transactionUrl } from './ApiUrl';
 
 const token = sessionStorage.getItem('userToken');
 
@@ -10,4 +10,12 @@ export const userAxios = axios.create({
         'x-powered-token': `${token}`
     }
 });
+
+export const transactionAxios = axios.create({
+    baseURL: `${transactionUrl}`,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+
 

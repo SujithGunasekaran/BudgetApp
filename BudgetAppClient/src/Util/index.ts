@@ -3,6 +3,9 @@ interface objectKey {
     [key: string]: any
 }
 
+
+export const FullMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 export const formValidation = (objectKeys: string[], formData: objectKey, errorStateSetter: any) => {
 
     let result = true;
