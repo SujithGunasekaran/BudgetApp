@@ -100,7 +100,8 @@
     color: var(--text-light);
     background-color: var(--btn-highlight-bg);
 }
-.form_app_card_form_btn:disabled
+.form_app_card_form_btn:disabled,
+.form_app_card_form_btn:disabled:hover
 {
     background-color: var(--btn-disabled-bg);
 }

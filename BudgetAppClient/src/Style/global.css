@@ -31,9 +31,9 @@
 
     /* Dark Theme */
 
-    --body-bg : #000000;
-    --header-bg : #000000;
-    --form-input-bg : #242424;
+    --body-bg : #18191a;
+    --header-bg : #242526;
+    --form-input-bg : #18191a;
     --form-input-border : #3B3B3B;
     --form-focus-border : #4D9EEA;
     --form-input-text : #fff;
@@ -44,20 +44,20 @@
     --btn-highlight-bg : #1D9BF0;
     --btn-highlight-hover-bg : #3090eb;
     --btn-disabled-bg : #8b8b8d;
-    --text-bg : #222222;
+    --text-bg : #18191a;
     --text-highlight-dark : #1D9BF0;
     --title-dark : #333333;
     --title-heading : #9b9b9b;
     --title-highlight : #fafafa;
-    --title-light : #ebecf1;
+    --title-light : #dededf;
     --title-sub-heading : #8a8f98;
     --card-bg-grey : #2b2b2b;
-    --card-bg : #000000;
+    --card-bg : #242526;
     --card-light-dark : #1f1e1e;
     --card-border : #3b3b3b;
     --dropdown-values-bg : rgb(77,158,234, 0.2);
     --dropdown-values-color : #1D9BF0;
-    --scroll-border : rgb(88, 88, 88);
+    --scroll-border : rgb(109, 108, 108);
 
 
     --danger-alert-text : #ff5a4e;

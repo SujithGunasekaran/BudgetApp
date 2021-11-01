@@ -8,7 +8,33 @@
 
 .finance_top_header_container
 {
-    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.finance_top_header_info_child_one
+{
+    padding: 0px;
+}
+.finance_top_header_info_name
+{
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--title-heading);
+    font-family: var(--font-family-sans-serif);
+}
+.finance_top_header_info_sub
+{
+    padding-top: 5px;
+    font-size: .850rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--title-sub-heading);
+    font-family: var(--font-family-sans-serif);
+}
+.finance_top_header_info_child_two
+{
     display: flex;
     align-items: center;
 }
@@ -23,16 +49,16 @@
 }
 .finance_top_header_logo_bg
 {
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     background-color: var(--icon-bg);
 }
 .finance_top_header_logo
 {
-    width: 25px;
-    height: 25px;
-    margin: 9px 10px;
+    width: 19px;
+    height: 19px;
+    margin: 8px 8px;
     color: var(--icon-color);
 }
 .finance_top_header_heading
@@ -59,17 +85,10 @@
 }
 .finance_transaction_info_container
 {
-    display: flex;
-    flex-direction: column;
-    margin: 10px 25px 15px 0px;
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     padding: 25px 20px;
     border-radius: 10px;
-}
-.finance_transaction_info_container:nth-child(n + 2)
-{
-    margin: 10px 25px 15px 25px;
 }
 
 .finance_transaction_info_icon
@@ -90,10 +109,10 @@
 }
 .finance_transaction_info_money
 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 700;
     letter-spacing: 0.010rem;
-    color: var(--title-heading);
+    color: var(--title-light);
     font-family: var(--font-family-sans-serif);
     transition: 0.4s all ease-in-out;
 }
@@ -265,7 +284,7 @@
 {
     width: 5px;
     border-radius: 0px;
-    background-color: var(--form-input-bg);
+    background-color: var(--card-bg);
 }
 
 .model_custom_dopdown_list.show::-webkit-scrollbar-track,
