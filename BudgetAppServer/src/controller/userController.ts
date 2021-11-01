@@ -29,7 +29,7 @@ export const checkIsUserTokenValid = async (req: Request, res: Response, next: N
     catch (err) {
         res.status(404).json({
             status: "Error",
-            message: 'Invalid Token'
+            message: 'InvalidToken'
         });
     }
 }

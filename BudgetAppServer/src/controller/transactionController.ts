@@ -21,7 +21,7 @@ export const checkIsUserTokenValid = async (req: Request, res: Response, next: N
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: 'Invalid Token'
+            message: 'InvalidToken'
         })
     }
 }
