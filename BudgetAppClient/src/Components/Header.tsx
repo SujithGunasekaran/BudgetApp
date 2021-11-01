@@ -56,7 +56,7 @@ const Header: FC<HeaderProps> = (props) => {
         try {
             const response: any = await userAxios.get('/checkUser', {
                 headers: {
-                    'x-powered-token': userToken ? userToken : ''
+                    'x-powered-token': userToken || ''
                 }
             });
             if (response.data && response.data.status === 'Success') {
@@ -69,8 +69,8 @@ const Header: FC<HeaderProps> = (props) => {
         }
         catch (err: any) {
             if (err.response && err.response.data) {
-                if (err.response.data.message === 'Invalid Token') {
-                    sessionStorage.clear();
+                if (err.response.data.message === 'InvalidToken') {
+                    sessionStorage.removeItem('userToken');
                     history.push('/');
                 }
             }

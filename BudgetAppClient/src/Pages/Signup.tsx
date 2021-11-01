@@ -33,9 +33,10 @@ const Signup: FC = () => {
                 }
             }
             catch (err: any) {
-                if (err.response.data) {
+                if (err && err.response && err.response.data) {
                     setSignupError(err.response.data.message);
                 }
+                else setSignupError('Error while Signup, Please try again later!');
             }
             finally {
                 setLoader(false);
@@ -101,7 +102,7 @@ const Signup: FC = () => {
                                             <div className="form_app_card_error_message">{formError.usernameError}</div>
                                         }
                                         <input
-                                            type="text"
+                                            type="email"
                                             className="form_app_card_form_input"
                                             placeholder="Email Address"
                                             name="email"

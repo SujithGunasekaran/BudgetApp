@@ -12,6 +12,7 @@ export const formValidation = (objectKeys: string[], formData: objectKey, errorS
     objectKeys.forEach(key => {
         if (key === 'password') {
             if (formData[key] && formData[key].length < 7) {
+                result = false;
                 errorStateSetter((prevValue: objectKey) => {
                     let errorMessage = JSON.parse(JSON.stringify(prevValue));
                     errorMessage = {

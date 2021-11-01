@@ -1,9 +1,14 @@
 import React, { FC, Fragment, lazy, Suspense } from 'react';
+import { withRouter } from 'react-router-dom';
 
 const FinanceTractionHeader = lazy(() => import('../UI/Finance/TransactionHeader'));
 const FinanceIconHeader = lazy(() => import('../UI/Finance/IconHeader'));
 
-const Finance: FC = () => {
+type FinanceProps = {
+    history: any
+}
+
+const Finance: FC<FinanceProps> = (props) => {
 
     return (
         <Fragment>
@@ -18,7 +23,9 @@ const Finance: FC = () => {
                         <div className="col-md-12">
                             <div className="finance_top_header_container">
                                 <Suspense fallback={<div>Loading...</div>}>
-                                    <FinanceIconHeader />
+                                    <FinanceIconHeader
+                                        history={props.history}
+                                    />
                                 </Suspense>
                             </div>
                         </div>
@@ -31,4 +38,4 @@ const Finance: FC = () => {
 };
 
 
-export default Finance;
+export default withRouter(Finance);

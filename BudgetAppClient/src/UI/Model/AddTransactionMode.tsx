@@ -11,6 +11,7 @@ const SuccessMessage = lazy(() => import('../Messages/SuccessMessage'));
 const ErrorMessage = lazy(() => import('../Messages/ErrorMessage'));
 
 type TransactionModelProps = {
+    history?: any
     handleTransactionView: (value?: boolean) => void
 }
 
@@ -22,7 +23,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // props
-    const { handleTransactionView } = props;
+    const { history, handleTransactionView } = props;
 
     // hooks
     const { formValue, formError, handleFormValueWithEvent, handleFormValueWithParams, setFormError } = useForm();
@@ -78,6 +79,13 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                 }
             }
             catch (err: any) {
+                if (err && err.response && err.response.data) {
+                    const { message } = err.response.data;
+                    if (message === 'InvalidToken') {
+                        sessionStorage.removeItem('userToken');
+                        history.push('/');
+                    }
+                }
                 setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
             }
             finally {

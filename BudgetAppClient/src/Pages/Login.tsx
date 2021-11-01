@@ -41,9 +41,10 @@ const Login: FC<LoginProps> = (props) => {
                 }
             }
             catch (err: any) {
-                if (err.response.data) {
+                if (err && err.response && err.response.data) {
                     setLoginError(err.response.data.message);
                 }
+                else setLoginError('Error while Loggin in, Please try again later!');
             }
             finally {
                 setLoader(false);
