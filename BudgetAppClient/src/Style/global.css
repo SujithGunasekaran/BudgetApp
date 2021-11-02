@@ -43,6 +43,8 @@
     --icon-dark-color : #929699;
     --btn-highlight-bg : #1D9BF0;
     --btn-highlight-hover-bg : #3090eb;
+    --btn-danger-bg : #ff5a4e;
+    --btn-danger-hover-bg : #fa483b;
     --btn-disabled-bg : #8b8b8d;
     --text-bg : #18191a;
     --text-highlight-dark : #1D9BF0;
