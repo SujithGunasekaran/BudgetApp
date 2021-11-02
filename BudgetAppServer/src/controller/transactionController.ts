@@ -7,6 +7,11 @@ interface objectKeys {
     [key: string]: any
 }
 
+type ValidAndInvalidResult = {
+    isTransactionAdded: boolean,
+    transactionOverview?: objectKeys
+}
+
 
 export const checkIsUserTokenValid = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -112,8 +117,17 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
             runValidators: true
         }
     );
-    if (!savedTransactionData) return false;
-    return true;
+    if (!savedTransactionData) return { isTransactionAdded: false };
+    const result = {
+        isTransactionAdded: true,
+        transactionOverview: {
+            income: savedTransactionData.income,
+            expenses: savedTransactionData.expenses,
+            investment: savedTransactionData.investment,
+            balance: savedTransactionData.balance
+        }
+    }
+    return result;
 }
 
 
@@ -148,8 +162,17 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
             runValidators: true
         }
     );
-    if (!savedTransactionData) return false;
-    return true;
+    if (!savedTransactionData) return { isTransactionAdded: false };
+    const result = {
+        isTransactionAdded: true,
+        transactionOverview: {
+            income: savedTransactionData.income,
+            expenses: savedTransactionData.expenses,
+            investment: savedTransactionData.investment,
+            balance: savedTransactionData.balance
+        }
+    }
+    return result;
 }
 
 const createNewMonthInYear = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
@@ -185,8 +208,17 @@ const createNewMonthInYear = async (inputData: objectKeys, userId: any, previous
             runValidators: true
         }
     );
-    if (!savedTransactionData) return false;
-    return true;
+    if (!savedTransactionData) return { isTransactionAdded: false };
+    const result = {
+        isTransactionAdded: true,
+        transactionOverview: {
+            income: savedTransactionData.income,
+            expenses: savedTransactionData.expenses,
+            investment: savedTransactionData.investment,
+            balance: savedTransactionData.balance
+        }
+    }
+    return result;
 }
 
 export const addTransaction = async (req: Request, res: Response) => {
@@ -199,7 +231,13 @@ export const addTransaction = async (req: Request, res: Response) => {
             savedData = await TransactionModel.create(savedData);
             res.status(200).json({
                 status: 'Success',
-                data: savedData
+                message: 'Transaction added Successfully',
+                transactionOverview: {
+                    income: savedData.income,
+                    expenses: savedData.expenses,
+                    investment: savedData.investment,
+                    balance: savedData.balance
+                }
             });
             return;
         }
@@ -222,37 +260,84 @@ export const addTransaction = async (req: Request, res: Response) => {
                 }
             );
             if (dateData) {
-                const isTransactionAdded = await addTransactionInfoToDate(req.body, userId, dateData);
+                const transactionResult: ValidAndInvalidResult = await addTransactionInfoToDate(req.body, userId, dateData);
+                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
                 if (!isTransactionAdded) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
-                    message: 'transaction added Successfully'
+                    message: 'Transaction added Successfully',
+                    transactionOverview: {
+                        income: transactionOverview.income,
+                        expenses: transactionOverview.expenses,
+                        investment: transactionOverview.investment,
+                        balance: transactionOverview.balance
+                    }
                 });
                 return;
             }
             else {
-                const isDateAdded = await createNewDateInMonth(req.body, userId, monthData);
-                if (!isDateAdded) throw new Error('Errow while adding Transaction');
+                const transactionResult: ValidAndInvalidResult = await createNewDateInMonth(req.body, userId, monthData);
+                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
+                if (!isTransactionAdded) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
-                    message: 'date added Successfully'
+                    message: 'Transaction added Successfully',
+                    transactionOverview: {
+                        income: transactionOverview.income,
+                        expenses: transactionOverview.expenses,
+                        investment: transactionOverview.investment,
+                        balance: transactionOverview.balance
+                    }
                 });
                 return;
             }
         }
         else {
-            const isMonthAdded = await createNewMonthInYear(req.body, userId, userTransactionHistory);
-            if (!isMonthAdded) throw new Error('Error while adding Transaction');
+            const transactionResult: ValidAndInvalidResult = await createNewMonthInYear(req.body, userId, userTransactionHistory);
+            const { isTransactionAdded, transactionOverview = {} } = transactionResult;
+            if (!isTransactionAdded) throw new Error('Error while adding Transaction');
             res.status(200).json({
                 status: 'Success',
-                message: 'month added Successfully'
-            })
+                message: 'Transaction added Successfully',
+                transactionOverview: {
+                    income: transactionOverview.income,
+                    expenses: transactionOverview.expenses,
+                    investment: transactionOverview.investment,
+                    balance: transactionOverview.balance
+                }
+            });
+            return;
         }
     }
     catch (err: any) {
         res.status(404).json({
             status: 'Failed',
             message: 'Error While adding traction, Please try again later..'
+        })
+    }
+}
+
+
+export const getTransactionOverview = async (req: Request, res: Response) => {
+    try {
+        const { userId, year } = req.query;
+        const userTransactionData = await TransactionModel.findOne({ userId, year });
+        if (!userTransactionData) throw new Error('Error while getting transaction');
+        const result = {
+            income: userTransactionData.income,
+            expenses: userTransactionData.expenses,
+            investment: userTransactionData.investment,
+            balance: userTransactionData.balance
+        };
+        res.status(200).json({
+            status: 'Success',
+            transactionOverview: result
+        });
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
+            message: 'Something went wrong while getting transaction data.'
         })
     }
 }

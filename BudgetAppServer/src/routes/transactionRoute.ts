@@ -3,7 +3,8 @@ import * as transactionController from '../controller/transactionController';
 
 const router = Router();
 
-router.post('/addTransaction', transactionController.addTransaction);
+router.post('/addTransaction', transactionController.checkIsUserTokenValid, transactionController.addTransaction);
+router.get('/getTransactionOverview', transactionController.checkIsUserTokenValid, transactionController.getTransactionOverview);
 
 
 export default router;
