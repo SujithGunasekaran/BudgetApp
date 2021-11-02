@@ -1,8 +1,9 @@
 import React, { FC, Fragment, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router-dom';
+import AuthHoc from '../Hoc/Auth';
 
-const FinanceTractionHeader = lazy(() => import('../UI/Finance/TransactionHeader'));
-const FinanceIconHeader = lazy(() => import('../UI/Finance/IconHeader'));
+const TransactionOverView = lazy(() => import('../Components/Finance/TransactionOverview'));
+const TransactionHistory = lazy(() => import('../Components/Finance/TransactionHistory'));
 
 type FinanceProps = {
     history: any
@@ -16,14 +17,16 @@ const Finance: FC<FinanceProps> = (props) => {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-12">
-                            <FinanceTractionHeader />
+                            <TransactionOverView
+                                history={props.history}
+                            />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-md-12">
                             <div className="finance_top_header_container">
                                 <Suspense fallback={<div>Loading...</div>}>
-                                    <FinanceIconHeader
+                                    <TransactionHistory
                                         history={props.history}
                                     />
                                 </Suspense>
@@ -38,4 +41,4 @@ const Finance: FC<FinanceProps> = (props) => {
 };
 
 
-export default withRouter(Finance);
+export default withRouter(AuthHoc(Finance));

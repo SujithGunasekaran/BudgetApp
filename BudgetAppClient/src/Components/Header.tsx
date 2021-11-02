@@ -1,10 +1,11 @@
-import React, { FC, Fragment, useEffect, useRef } from 'react';
+import React, { FC, Fragment, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { PersonIcon, LogoutIcon } from '../UI/Icon';
-import { userAxios } from '../Util/Api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../ReduxStore/Reducers';
+
+const StatusConfirmModel = lazy(() => import('../UI/Model/StatusConfirmModel'));
 
 type HeaderProps = {
     history: any,
@@ -14,26 +15,18 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = (props) => {
 
+    // react-state
+    const [showLogoutModel, setShowLogoutModel] = useState<boolean>(false);
+    const [logoutLoader, setLogoutLoader] = useState<boolean>(false);
+
     // props
     const { location, history } = props;
-
-    // dispatch
-    const dispatch = useDispatch();
 
     // redux state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
 
     // ref
     const userModelRef = useRef<any>(null);
-
-
-    useEffect(() => {
-        if (location.pathname !== '/' && location.pathname !== '/createAccount') {
-            checkIstokenValid();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location])
-
 
     useEffect(() => {
         if (location.pathname !== '/' && location.pathname !== '/createAccount') {
@@ -51,38 +44,26 @@ const Header: FC<HeaderProps> = (props) => {
     }, [])
 
 
-    const checkIstokenValid = async () => {
-        const userToken = sessionStorage.getItem('userToken');
-        try {
-            const response: any = await userAxios.get('/checkUser', {
-                headers: {
-                    'x-powered-token': userToken || ''
-                }
-            });
-            if (response.data && response.data.status === 'Success') {
-                const { data } = response;
-                dispatch({
-                    type: 'SET_USER_INFO',
-                    userInfo: data.userInfo
-                });
-            }
-        }
-        catch (err: any) {
-            if (err.response && err.response.data) {
-                if (err.response.data.message === 'InvalidToken') {
-                    sessionStorage.removeItem('userToken');
-                    history.push('/');
-                }
-            }
-        }
-    }
-
     const showUserModel = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, refObject: { [key: string]: any }) => {
         e.stopPropagation();
         if (refObject) {
             if (!refObject.current.classList.contains('show')) refObject.current.classList.add('show');
             else refObject.current.classList.remove('show');
         }
+    }
+
+    const handleLogoutModel = (input: boolean) => {
+        setShowLogoutModel(input);
+    }
+
+    const handleLogout = () => {
+        setLogoutLoader(true);
+        setTimeout(() => {
+            sessionStorage.removeItem('userToken');
+            setLogoutLoader(false);
+            setShowLogoutModel(false);
+            history.push('/');
+        }, 2000)
     }
 
     return (
@@ -99,7 +80,7 @@ const Header: FC<HeaderProps> = (props) => {
                         <Link to="/finance" className={`header_menu_item ${location.pathname === '/finance' && 'active'}`}>Finance</Link>
                     </div>
                     <div className="header_user_info_container">
-                        <div className="header_user_info_name" onClick={(e) => showUserModel(e, userModelRef)}>{userInfo.userName}</div>
+                        <div className="header_user_info_name" onClick={(e) => showUserModel(e, userModelRef)}>{userInfo?.userName ?? ''}</div>
                         <div className="header_user_info_logo_bg" onClick={(e) => showUserModel(e, userModelRef)}>
                             <PersonIcon
                                 cssClass="header_user_info_logo"
@@ -116,10 +97,24 @@ const Header: FC<HeaderProps> = (props) => {
                                 <LogoutIcon
                                     cssClass="header_user_model_icon"
                                 />
-                                <div className="header_user_model_name">Logout</div>
+                                <div className="header_user_model_name" onClick={() => handleLogoutModel(true)}>Logout</div>
                             </div>
                         </div>
                     </div>
+                </div>
+            }
+            {
+                showLogoutModel &&
+                <div className="overlay">
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <StatusConfirmModel
+                            message="Are you sure you want to logout"
+                            successBtnDisplay="Logout"
+                            handleConfirmModelView={handleLogoutModel}
+                            handleConfirmSuccess={handleLogout}
+                            loader={logoutLoader}
+                        />
+                    </Suspense>
                 </div>
             }
         </Fragment>
