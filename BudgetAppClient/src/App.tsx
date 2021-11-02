@@ -5,7 +5,7 @@ import './Style/Login.css';
 import './Style/Header.css';
 import './Style/Finance.css';
 import './Style/messageModel.css';
-
+import './Style/model.css';
 
 const App: FC = () => {
 

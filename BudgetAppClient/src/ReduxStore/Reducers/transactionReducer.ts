@@ -1,28 +1,30 @@
-import { SET_TRANSACTION } from '../Types';
+import { SET_TRANSACTION_OVERVIEW } from '../Types';
 
 type TransactionReducer = {
-    transactionData: { [key: string]: any }
+    income: string | number,
+    expenses: string | number,
+    investment: string | number,
+    balance: string | number
 }
 
 const initialState: TransactionReducer = {
-    transactionData: {}
+    income: 0,
+    expenses: 0,
+    investment: 0,
+    balance: 0
 };
 
 
 export default function transactionReducer(state = initialState, action: { [key: string]: any }) {
     switch (action.type) {
-        case SET_TRANSACTION:
-            const { month, date, transactionInput } = action.value;
-            let transactionData = JSON.parse(JSON.stringify(state.transactionData));
-            if (!transactionData[month]) transactionData[month] = {};
-            if (!transactionData[month][date]) transactionData[month][date] = [];
-            transactionData[month][date] = [
-                ...transactionData[month][date],
-                transactionInput
-            ];
+        case SET_TRANSACTION_OVERVIEW:
+            const { income, expenses, investment, balance } = action.transactionOverview;
             return {
                 ...state,
-                transactionData
+                income,
+                expenses,
+                investment,
+                balance
             }
         default: return state;
     }

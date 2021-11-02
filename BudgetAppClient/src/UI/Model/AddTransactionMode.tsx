@@ -5,7 +5,7 @@ import useForm from '../../Hooks/useForm';
 import { formValidation, FullMonth } from '../../Util';
 import { transactionAxios } from '../../Util/Api';
 import { RootState } from '../../ReduxStore/Reducers';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const SuccessMessage = lazy(() => import('../Messages/SuccessMessage'));
 const ErrorMessage = lazy(() => import('../Messages/ErrorMessage'));
@@ -34,6 +34,9 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
 
     // redux-state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
+
+    // dispatch
+    const dispatch = useDispatch();
 
 
     const handleCustomDropDown = (refObject: { [key: string]: any }) => {
@@ -75,6 +78,10 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                     }
                 });
                 if (response && response.data && response.data.status === 'Success') {
+                    dispatch({
+                        type: 'SET_TRANSACTION_OVERVIEW',
+                        transactionOverview: response.data.transactionOverview
+                    })
                     setApiSuccessMessage('Transaction Added Successfully');
                 }
             }
@@ -82,11 +89,14 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                 if (err && err.response && err.response.data) {
                     const { message } = err.response.data;
                     if (message === 'InvalidToken') {
+                        setApiErrorMessage('Invalid Token, User not Authenticated');
                         sessionStorage.removeItem('userToken');
-                        history.push('/');
+                        setTimeout(() => {
+                            history.push('/');
+                        }, 3000)
                     }
                 }
-                setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
+                else setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
             }
             finally {
                 setIsLoading(false);
