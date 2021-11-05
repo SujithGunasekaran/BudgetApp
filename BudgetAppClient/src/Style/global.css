@@ -53,6 +53,7 @@
     --title-highlight : #fafafa;
     --title-light : #dededf;
     --title-sub-heading : #8a8f98;
+    --container-light-blue-bg : rgb(77,158,234, 0.2);
     --card-bg-grey : #2b2b2b;
     --card-bg : #242526;
     --card-light-dark : #1f1e1e;
@@ -93,6 +94,7 @@
 {
     padding: 15px 5px;
     min-height: 100vh;
+    scroll-behavior: smooth;
 }
 
 .overlay 

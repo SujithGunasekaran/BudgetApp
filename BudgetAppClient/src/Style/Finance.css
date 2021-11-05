@@ -8,7 +8,7 @@
 
 .finance_top_header_container
 {
-    margin-top: 30px;
+    margin: 30px 0px 30px 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -115,4 +115,97 @@
     color: var(--title-light);
     font-family: var(--font-family-sans-serif);
     transition: 0.4s all ease-in-out;
+}
+
+
+/* Finance transaction filter */
+
+.finance_filter_container
+{
+    width: 100%;
+}
+.finance_filter_custom_dropdown
+{
+    position: relative;
+}
+.finance_filter_custom_dropdown_container
+{
+    margin: 30px 0px 15px 0px;
+    border-radius: 7px;
+    width: 100%;
+    padding: 0px 8px 0px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 45px;
+    cursor: pointer;
+    border: 1px solid var(--form-input-border);
+    background-color: var(--form-input-bg);
+}
+.finance_filter_custom_dropdown_list
+{
+    display: none;
+    max-height: 150px;
+    border-radius: 7px;
+    border: 1px solid var(--form-input-border);
+    overflow-y: scroll;
+    background-color: var(--form-input-bg);
+}
+.finance_filter_custom_dropdown_list.show
+{
+    display: block;
+    position: absolute;
+    width: 100%;
+}
+.finance_filter_custom_dropdown_list.show::-webkit-scrollbar
+{
+    width: 5px;
+    border-radius: 0px;
+    background-color: var(--card-bg);
+}
+
+.finance_filter_custom_dropdown_list.show::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 0px;
+}
+
+.finance_filter_custom_dropdown_list.show::-webkit-scrollbar-thumb
+{
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: var(--scroll-border); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+.finance_filter_selected_option_container
+{
+    width: 100%;
+    height: 45px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 30px 0px 15px 0px;
+    padding: 12px 15px;
+    background-color: var(--container-light-blue-bg);
+}
+.finance_filter_selected_option_container > .name
+{
+    font-size: .9rem;
+    font-weight: 500;
+    width: 90px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-family: var(--font-family-sans-serif);
+    color: var(--text-highlight-dark);
+}
+.finance_filter_selected_option_container > .icon
+{
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+    color: var(--icon-color);
 }
