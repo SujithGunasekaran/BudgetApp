@@ -24,13 +24,11 @@ const Finance: FC<FinanceProps> = (props) => {
                     </div>
                     <div className="row">
                         <div className="col-md-12">
-                            <div className="finance_top_header_container">
-                                <Suspense fallback={<div>Loading...</div>}>
-                                    <TransactionHistory
-                                        history={props.history}
-                                    />
-                                </Suspense>
-                            </div>
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <TransactionHistory
+                                    history={props.history}
+                                />
+                            </Suspense>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import React, { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Header from '../Components/Header';
+import Footer from '../Components/Footer';
 
 const Login = lazy(() => import('../Pages/Login'));
 const Sinup = lazy(() => import('../Pages/Signup'));
@@ -22,6 +23,7 @@ const Routes: FC = () => {
                     </Suspense>
                 </Switch>
             </div>
+            <Footer />
         </BrowserRouter>
     )
 

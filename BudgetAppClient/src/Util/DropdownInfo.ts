@@ -13,6 +13,57 @@ export const transactionType = [
     }
 ];
 
+export const FullMonthNameList = [
+    {
+        displayValue: 'January',
+        value: 'Jan'
+    },
+    {
+        displayValue: 'February',
+        value: 'Feb'
+    },
+    {
+        displayValue: 'March',
+        value: 'Mar'
+    },
+    {
+        displayValue: 'April',
+        value: 'Apr'
+    },
+    {
+        displayValue: 'May',
+        value: 'May'
+    },
+    {
+        displayValue: 'June',
+        value: 'Jun'
+    },
+    {
+        displayValue: 'July',
+        value: 'Jul'
+    },
+    {
+        displayValue: 'Augest',
+        value: 'Aug'
+    },
+    {
+        displayValue: 'September',
+        value: 'Sep'
+    },
+    {
+        displayValue: 'October',
+        value: 'Oct'
+    },
+    {
+        displayValue: 'November',
+        value: 'Nov'
+    },
+    {
+        displayValue: 'December',
+        value: 'Dec'
+    },
+];
+
 const IncomCategories = [
     {
         displayValue: 'Salary',
