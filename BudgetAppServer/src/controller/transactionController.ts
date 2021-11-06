@@ -341,3 +341,63 @@ export const getTransactionOverview = async (req: Request, res: Response) => {
         })
     }
 }
+
+
+export const getTransactionDetail = async (req: Request, res: Response) => {
+    try {
+        const { year, groupBy, userId, month } = req.query;
+        let transactionData;
+        if (!month && !groupBy) {
+            transactionData = await TransactionModel.findOne({ userId, year });
+            if (!transactionData) throw new Error('Error while getting transaction data');
+        }
+        if (month && !groupBy) {
+            transactionData = await TransactionModel.findOne(
+                {
+                    userId,
+                    year,
+                    'transactionHistory.monthHistory': {
+                        $elemMatch: {
+                            month
+                        }
+                    }
+                }
+            );
+            if (!transactionData) {
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'There is not data for the selected month'
+                });
+                return;
+            }
+        }
+        if (!month && groupBy) {
+            transactionData = await TransactionModel.findOne(
+                {
+                    userId,
+                    year,
+                    'transactionHistory.monthHistory.dateHistory.transactionList.transactiontype': groupBy
+                }
+            );
+            if (!transactionData) {
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'There is no data for selected groupBy'
+                });
+                return;
+            }
+        }
+        res.status(200).json({
+            status: 'Success',
+            transactionDetail: transactionData.transactionHistory
+        });
+        return;
+    }
+    catch (err: any) {
+        console.log(err);
+        res.status(404).json({
+            status: 'Failed',
+            message: 'Error while getting the transaction data'
+        })
+    }
+}
