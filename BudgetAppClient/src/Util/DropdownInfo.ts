@@ -13,54 +13,56 @@ export const transactionType = [
     }
 ];
 
+export const FullMonthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augest', 'September', 'October', 'November', 'December'];
+
 export const FullMonthNameList = [
     {
         displayValue: 'January',
-        value: 'Jan'
+        value: '0'
     },
     {
         displayValue: 'February',
-        value: 'Feb'
+        value: '1'
     },
     {
         displayValue: 'March',
-        value: 'Mar'
+        value: '2'
     },
     {
         displayValue: 'April',
-        value: 'Apr'
+        value: '3'
     },
     {
         displayValue: 'May',
-        value: 'May'
+        value: '4'
     },
     {
         displayValue: 'June',
-        value: 'Jun'
+        value: '5'
     },
     {
         displayValue: 'July',
-        value: 'Jul'
+        value: '6'
     },
     {
         displayValue: 'Augest',
-        value: 'Aug'
+        value: '7'
     },
     {
         displayValue: 'September',
-        value: 'Sep'
+        value: '8'
     },
     {
         displayValue: 'October',
-        value: 'Oct'
+        value: '9'
     },
     {
         displayValue: 'November',
-        value: 'Nov'
+        value: '10'
     },
     {
         displayValue: 'December',
-        value: 'Dec'
+        value: '11'
     },
 ];
 

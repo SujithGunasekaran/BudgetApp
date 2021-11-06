@@ -1,11 +1,12 @@
-import React, { FC, Fragment, lazy, Suspense, useState } from 'react';
+import React, { FC, Fragment, lazy, Suspense, useState, memo } from 'react';
 import { AddIcon, CalculatorIcon } from '../../../UI/Icon';
 import { FullMonth } from '../../../Util/index';
 
 const AddTransactionModel = lazy(() => import('../../../UI/Model/AddTransactionMode'));
 
 type TransactionHistoryHeaderprops = {
-    history?: any
+    history?: any,
+    filteredMonth: string | undefined
 }
 
 const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
@@ -16,7 +17,7 @@ const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
     const [monthYearDetail] = useState<{ month: number, year: number }>({ month: new Date().getMonth(), year: new Date().getFullYear() });
 
     // props
-    const { history } = props;
+    const { history, filteredMonth } = props;
 
     const handleTransactionView = (value?: boolean | undefined) => {
         setCalculatorView(false);
@@ -33,7 +34,7 @@ const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
             <div className="finance_top_header_container">
                 <div className="finance_top_header_info_child_one">
                     <div className="finance_top_header_info_name">History</div>
-                    <div className="finance_top_header_info_sub">Transaction for {FullMonth[monthYearDetail.month]} {monthYearDetail.year}.</div>
+                    <div className="finance_top_header_info_sub">Transaction for {filteredMonth ? FullMonth[Number(filteredMonth)] : FullMonth[monthYearDetail.month]} {monthYearDetail.year}.</div>
                 </div>
                 <div className="finance_top_header_info_child_two">
                     <div className="finance_top_header_info_container">
@@ -70,4 +71,4 @@ const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
 
 }
 
-export default TransactionHistoryHeader;
+export default memo(TransactionHistoryHeader);
