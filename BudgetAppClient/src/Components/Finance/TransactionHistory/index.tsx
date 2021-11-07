@@ -2,7 +2,7 @@ import React, { Fragment, FC, lazy, Suspense, useState, useCallback } from 'reac
 
 const TransactionHistoryHeader = lazy(() => import('./HistoryHeader'));
 const TransactionFilter = lazy(() => import('./TransactionFilter'));
-const TransactionDetail = lazy(() => import('./TransactionDetial'));
+const TransactionDetail = lazy(() => import('./TransactionDetail'));
 
 type TransactionHistoryProps = {
     history?: any
