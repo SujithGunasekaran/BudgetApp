@@ -372,13 +372,59 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
             }
         }
         if (!month && groupBy) {
-            transactionData = await TransactionModel.findOne(
+            transactionData = await TransactionModel.aggregate([
                 {
-                    userId,
-                    year,
-                    'transactionHistory.monthHistory.dateHistory.transactionList.transactiontype': groupBy
+                    $match: {
+                        year
+                    }
+                },
+                {
+                    $project: {
+                        "transactionHistory.monthHistory": {
+                            $map: {
+                                input: {
+                                    $filter: {
+                                        input: "$transactionHistory.monthHistory",
+                                        as: "monthHistory",
+                                        cond: {}
+                                    }
+                                },
+                                as: "monthHistory",
+                                in: {
+                                    month: "$$monthHistory.month",
+                                    dateHistory: {
+                                        $map: {
+                                            input: {
+                                                $filter: {
+                                                    input: "$$monthHistory.dateHistory",
+                                                    as: "dateHistory",
+                                                    cond: {}
+                                                }
+                                            },
+                                            as: "dateHistory",
+                                            in: {
+                                                date: "$$dateHistory.date",
+                                                transactionList: {
+                                                    $filter: {
+                                                        input: "$$dateHistory.transactionList",
+                                                        as: "transactionList",
+                                                        cond: {
+                                                            $eq: [
+                                                                "$$transactionList.transactiontype",
+                                                                groupBy
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            );
+            ])
             if (!transactionData) {
                 res.status(200).json({
                     status: 'Success',
@@ -386,6 +432,7 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
                 });
                 return;
             }
+            transactionData = transactionData[0];
         }
         res.status(200).json({
             status: 'Success',
@@ -394,7 +441,6 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
         return;
     }
     catch (err: any) {
-        console.log(err);
         res.status(404).json({
             status: 'Failed',
             message: 'Error while getting the transaction data'
