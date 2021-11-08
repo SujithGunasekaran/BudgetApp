@@ -3,7 +3,7 @@ export const transactionCategoryInput: { [key: string]: any } = {
         'icon': 'fas fa-rupee-sign',
         'backgroundColor': 'var(--icon-bg)',
         'color': 'var(--icon-color)',
-        'padding': '13px 13px'
+        'padding': '13px 14px'
     },
     'Other': {
         'icon': 'fas fa-house-user',

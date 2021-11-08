@@ -43,6 +43,8 @@ const TransactionHistory: FC<TransactionHistoryProps> = (props) => {
             <Suspense fallback={<div>Loading...</div>}>
                 <TransactionDetail
                     history={history}
+                    filterGroupBy={filterGroupBy}
+                    filterMonth={filterMonth}
                 />
             </Suspense>
         </Fragment>
