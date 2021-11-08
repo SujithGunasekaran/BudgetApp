@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import TransactionModel from '../mongodb/model/transactionModel';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { config } from '../config';
 
 interface objectKeys {
@@ -366,15 +367,19 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
             if (!transactionData) {
                 res.status(200).json({
                     status: 'Success',
-                    message: 'There is not data for the selected month'
+                    transactionDetail: {
+                        monthHistory: []
+                    }
                 });
                 return;
             }
         }
         if (!month && groupBy) {
+            const userInfoId: any = userId;
             transactionData = await TransactionModel.aggregate([
                 {
                     $match: {
+                        userId: new mongoose.Types.ObjectId(userInfoId),
                         year
                     }
                 },
@@ -424,11 +429,81 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
                         }
                     }
                 }
-            ])
-            if (!transactionData) {
+            ]);
+            if (!transactionData || transactionData.length === 0) {
                 res.status(200).json({
                     status: 'Success',
-                    message: 'There is no data for selected groupBy'
+                    message: 'You have not done any transaction for the selected categories.'
+                });
+                return;
+            }
+            transactionData = transactionData[0];
+        }
+        if (month && groupBy) {
+            const userInfoId: any = userId;
+            transactionData = await TransactionModel.aggregate([
+                {
+                    $match: {
+                        userId: new mongoose.Types.ObjectId(userInfoId),
+                        year
+                    }
+                },
+                {
+                    $project: {
+                        "transactionHistory.monthHistory": {
+                            $map: {
+                                input: {
+                                    $filter: {
+                                        input: "$transactionHistory.monthHistory",
+                                        as: "monthHistory",
+                                        cond: {
+                                            $eq: [
+                                                "$$monthHistory.month",
+                                                month
+                                            ]
+                                        }
+                                    }
+                                },
+                                as: "monthHistory",
+                                in: {
+                                    month: "$$monthHistory.month",
+                                    dateHistory: {
+                                        $map: {
+                                            input: {
+                                                $filter: {
+                                                    input: "$$monthHistory.dateHistory",
+                                                    as: "dateHistory",
+                                                    cond: {}
+                                                }
+                                            },
+                                            as: "dateHistory",
+                                            in: {
+                                                date: "$$dateHistory.date",
+                                                transactionList: {
+                                                    $filter: {
+                                                        input: "$$dateHistory.transactionList",
+                                                        as: "transactionList",
+                                                        cond: {
+                                                            $eq: [
+                                                                "$$transactionList.transactiontype",
+                                                                groupBy
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]);
+            if (!transactionData || transactionData.length === 0) {
+                res.status(200).json({
+                    status: 'Success',
+                    message: 'You have not done any transaction for the selected month and groupBy'
                 });
                 return;
             }
