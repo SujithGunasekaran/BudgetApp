@@ -22,7 +22,8 @@
     color: var(--title-heading);
     font-size: 1.1rem;
     font-weight: 500;
-    font-family: var(--font-family-inter-font);
+    word-spacing: 1px;
+    font-family: var(--font-family-sans-serif);
 }
 .model_confirm_footer_container
 {
