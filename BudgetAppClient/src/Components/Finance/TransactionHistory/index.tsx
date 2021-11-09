@@ -1,4 +1,5 @@
 import React, { Fragment, FC, lazy, Suspense, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 const TransactionHistoryHeader = lazy(() => import('./HistoryHeader'));
 const TransactionFilter = lazy(() => import('./TransactionFilter'));
@@ -17,9 +18,20 @@ const TransactionHistory: FC<TransactionHistoryProps> = (props) => {
     // props
     const { history } = props;
 
+    // dispatch
+    const dispatch = useDispatch();
 
-    const handleFilterOptions = useCallback((inputValue: string | undefined, stateSetterCallback: React.Dispatch<React.SetStateAction<string | undefined>>) => {
+
+    const handleFilterOptions = useCallback((inputValue: string | undefined, stateSetterCallback: React.Dispatch<React.SetStateAction<string | undefined>>, isStateNeedToBeUpdated: boolean = false) => {
         stateSetterCallback(inputValue);
+        if (isStateNeedToBeUpdated) {
+            dispatch({
+                type: 'SET_IS_FILTER_ENABLED',
+                value: -1
+            });
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

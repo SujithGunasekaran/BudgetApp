@@ -1,7 +1,7 @@
 import React, { Fragment, FC, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../../../UI/Icon';
 import { transactionType, FullMonthNameList, FullMonthName } from '../../../Util/DropdownInfo';
-
+import { useDispatch, useSelector } from 'react-redux';
 
 type TransactionFilterProps = {
     history?: any,
@@ -9,7 +9,7 @@ type TransactionFilterProps = {
     filterMonth: string | undefined,
     setFilterGroupBy: React.Dispatch<React.SetStateAction<string | undefined>>,
     setFilterMonth: React.Dispatch<React.SetStateAction<string | undefined>>,
-    handleFilterOptions: (inputValue: string | undefined, stateSetterCallback: React.Dispatch<React.SetStateAction<string | undefined>>) => void
+    handleFilterOptions: (inputValue: string | undefined, stateSetterCallback: React.Dispatch<React.SetStateAction<string | undefined>>, isStateNeedToBeUpdated: boolean) => void
 }
 
 const TransactionFilter: FC<TransactionFilterProps> = (props) => {
@@ -21,6 +21,9 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
     // props
     const { filterGroupBy, filterMonth, setFilterGroupBy, setFilterMonth, handleFilterOptions, } = props;
 
+    // dispatch
+    const dispatch = useDispatch();
+
     const handleCustomDropDown = (parentRef: { [key: string]: any }) => {
         if (parentRef.current) {
             if (parentRef.current.classList.contains('show')) parentRef.current.classList.remove('show');
@@ -31,16 +34,24 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
     const handleFilterGroupBy = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
         if (e !== null && e.target instanceof HTMLElement) {
             const element = e.target;
-            handleFilterOptions(element.dataset.value, setFilterGroupBy);
+            handleFilterOptions(element.dataset.value, setFilterGroupBy, false);
             handleCustomDropDown(parentRef);
+            dispatch({
+                type: 'SET_IS_FILTER_ENABLED',
+                value: 1
+            })
         }
     }
 
     const handleFilterMonth = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
         if (e !== null && e.target instanceof HTMLElement) {
             const element = e.target;
-            handleFilterOptions(element.dataset.value, setFilterMonth);
-            handleCustomDropDown(parentRef)
+            handleFilterOptions(element.dataset.value, setFilterMonth, false);
+            handleCustomDropDown(parentRef);
+            dispatch({
+                type: 'SET_IS_FILTER_ENABLED',
+                value: 1
+            })
         }
     }
 
@@ -51,7 +62,7 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
                 <div className="name">{displayName}</div>
                 <CancelIcon
                     cssClass="icon"
-                    handleEvent={() => handleFilterOptions(undefined, callback)}
+                    handleEvent={() => handleFilterOptions(undefined, callback, true)}
                 />
             </div>
         </div>
@@ -81,7 +92,6 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
                             <div className="finance_filter_custom_dropdown_list" ref={groupByRef}>
                                 {
                                     transactionType.map((transactionInfo, index) => {
-                                        console.log("list render")
                                         return (
                                             <div key={index} data-value={transactionInfo.value} onClick={(e) => handleFilterGroupBy(e, groupByRef)} className="model_custom_dropdown_item">{transactionInfo.displayValue}</div>
                                         )
