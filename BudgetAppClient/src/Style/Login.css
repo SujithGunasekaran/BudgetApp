@@ -37,9 +37,10 @@
     width: 100%;
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
+    /* box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
     -webkit-box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
-    -moz-box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%);
+    -moz-box-shadow: 1px 5px 20px -10px rgb(0 0 0 / 78%); */
+    box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
 }
 .form_app_card_heading
 {
