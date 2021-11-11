@@ -1,4 +1,4 @@
-import { SET_TRANSACTION_OVERVIEW, SET_IS_FILTER_ENABLED } from '../Types';
+import { SET_TRANSACTION_OVERVIEW, SET_IS_FILTER_ENABLED, SET_TRANSACTION_DETAILS } from '../Types';
 
 type TransactionReducer = {
     income: string | number,
@@ -6,7 +6,7 @@ type TransactionReducer = {
     investment: string | number,
     balance: string | number,
     isFilterEnabled: number,
-    transactionDetail: { [key: string]: any }[]
+    transactionDetail: { [key: string]: any }
 }
 
 const initialState: TransactionReducer = {
@@ -15,7 +15,7 @@ const initialState: TransactionReducer = {
     investment: 0,
     balance: 0,
     isFilterEnabled: 0,
-    transactionDetail: []
+    transactionDetail: {}
 };
 
 
@@ -34,6 +34,11 @@ export default function transactionReducer(state = initialState, action: { [key:
             return {
                 ...state,
                 isFilterEnabled: state.isFilterEnabled + action.value
+            }
+        case SET_TRANSACTION_DETAILS:
+            return {
+                ...state,
+                transactionDetail: action.transactionDetail
             }
         default: return state;
     }

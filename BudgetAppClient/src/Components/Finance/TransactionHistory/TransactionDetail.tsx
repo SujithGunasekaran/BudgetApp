@@ -1,7 +1,7 @@
 import React, { Fragment, FC, useEffect, useState, lazy, Suspense } from 'react';
 import { transactionAxios } from '../../../Util/Api';
 import { FullMonth } from '../../../Util/index';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../ReduxStore/Reducers';
 import ErrorMessage from '../../../UI/Messages/ErrorMessage';
 
@@ -16,11 +16,15 @@ type TransactionDetailProps = {
 const TransactionDetail: FC<TransactionDetailProps> = (props) => {
 
     // react-state
-    const [monthHistory, setMonthHistory] = useState<{ [key: string]: any }[] | undefined>([]);
     const [apiErrorMessage, setApiErrorMessage] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // redux-state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
+    const { transactionDetail } = useSelector((state: RootState) => state.transactionReducer);
+
+    // dispatch
+    const dispatch = useDispatch();
 
     // props
     const { history, filterGroupBy, filterMonth } = props;
@@ -32,6 +36,7 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
 
     const getTransactionDetail = async () => {
         try {
+            setIsLoading(true);
             const userToken = sessionStorage.getItem('userToken');
             const response: any = await transactionAxios(`gettransactionDetail?userId=${userInfo.id}&year=${new Date().getFullYear()}&groupBy=${filterGroupBy || ''}&month=${FullMonth[Number(filterMonth)] || ''}`, {
                 headers: {
@@ -40,7 +45,11 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
             });
             if (response && response.data && response.data.status === 'Success') {
                 if (response.data.transactionDetail) {
-                    setMonthHistory(response.data.transactionDetail.monthHistory);
+                    const { transactionDetail } = response.data;
+                    dispatch({
+                        type: 'SET_TRANSACTION_DETAILS',
+                        transactionDetail
+                    })
                 }
             }
         }
@@ -56,6 +65,9 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                 }
             }
             else setApiErrorMessage('Error while getting transaction detail');
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 
@@ -87,8 +99,12 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                 <div className="col-md-12">
                     <div className="finance_transaction_detail_container">
                         {
-                            (monthHistory && monthHistory.length > 0) ?
-                                monthHistory.map((monthInfo, index) => (
+                            (
+                                Object.keys(transactionDetail).length > 0 &&
+                                transactionDetail.monthHistory &&
+                                transactionDetail.monthHistory.length > 0
+                            ) ?
+                                transactionDetail.monthHistory.map((monthInfo: any, index: any) => (
                                     <Fragment key={index}>
                                         {
                                             monthInfo &&
@@ -99,7 +115,6 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                                                         <TransactionDetailItem
                                                             dateInfo={dateInfo}
                                                             monthInfo={monthInfo}
-                                                            filterGroupBy={filterGroupBy}
                                                         />
                                                     </Suspense>
                                                 </Fragment>
@@ -112,6 +127,16 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                     </div>
                 </div>
             </div>
+            {
+                isLoading &&
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="finance_transaction_detail_loading">
+                            <div className="spinner-border" role="status" />
+                        </div>
+                    </div>
+                </div>
+            }
         </Fragment>
     )
 

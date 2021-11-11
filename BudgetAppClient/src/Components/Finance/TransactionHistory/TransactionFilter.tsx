@@ -1,7 +1,7 @@
 import React, { Fragment, FC, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../../../UI/Icon';
 import { transactionType, FullMonthNameList, FullMonthName } from '../../../Util/DropdownInfo';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 type TransactionFilterProps = {
     history?: any,

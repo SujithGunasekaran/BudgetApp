@@ -6,7 +6,7 @@ export const transactionCategoryInput: { [key: string]: any } = {
         'padding': '13px 14px'
     },
     'Other': {
-        'icon': 'fas fa-house-user',
+        'icon': 'fas fa-pen-alt',
         'backgroundColor': 'var(--icon-bg)',
         'color': 'var(--icon-color)',
         'padding': '10px 11px'
