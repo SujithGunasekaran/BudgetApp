@@ -356,14 +356,37 @@ export const getTransactionOverview = async (req: Request, res: Response) => {
 }
 
 
+const getMonthCount = async (userId: any, year: any) => {
+    const monthCount = await TransactionModel.aggregate([
+        {
+            $match: {
+                userId,
+                year
+            }
+        },
+        {
+            $project: {
+                count: {
+                    $size: '$transactionHistory.monthHistory'
+                }
+            }
+        }
+    ]);
+    return monthCount.length > 0 ? monthCount[0].count : 0;
+}
+
 export const getTransactionDetail = async (req: Request, res: Response) => {
     try {
-        const { year, groupBy, userId, month } = req.query;
+        const { year, groupBy, userId, month, visitedMonth } = req.query;
         const userInfoId: any = userId;
+        let visitedMonthLength: any = visitedMonth;
         const objectTypeUserId = new mongoose.Types.ObjectId(userInfoId);
         let transactionData;
+        let monthCount = await getMonthCount(objectTypeUserId, year);
+        let hasMoreData = (Number(visitedMonthLength) < monthCount - 2) ? true : false;
+        let nextMonthIndex = (Number(visitedMonthLength) < monthCount - 2) ? Number(visitedMonthLength) + 2 : Number(visitedMonthLength);
         if (!month && !groupBy) {
-            transactionData = await TransactionModel.findOne({ userId: objectTypeUserId, year });
+            transactionData = await TransactionModel.findOne({ userId: objectTypeUserId, year }, { 'transactionHistory.monthHistory': { $slice: [Number(visitedMonth), 2] } });
             if (!transactionData) throw new Error('Error while getting transaction data');
         }
         if (month && !groupBy) {
@@ -526,6 +549,8 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             status: 'Success',
+            hasMoreData,
+            nextMonthIndex,
             transactionDetail: transactionData.transactionHistory
         });
         return;
