@@ -1,7 +1,7 @@
 import React, { Fragment, FC, useEffect, useState, lazy, Suspense, useRef, useCallback } from 'react';
 import { transactionAxios } from '../../../Util/Api';
 import { FullMonth } from '../../../Util/index';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../ReduxStore/Reducers';
 import ErrorMessage from '../../../UI/Messages/ErrorMessage';
 
@@ -18,15 +18,12 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
     // react-state
     const [apiErrorMessage, setApiErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [hasMoreData, setHasMoreData] = useState<boolean>(false);
+    const [isTransactionDataToLoad, setisTransactionDataToLoad] = useState<boolean>(true);
     const [nextMonthIndex, setNextMonthIndex] = useState<number>(0);
+    const [transactionData, setTransactionData] = useState<{ [key: string]: any }>({ monthHistory: [] });
 
     // redux-state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
-    const { transactionDetail, visitedMonth } = useSelector((state: RootState) => state.transactionReducer);
-
-    // dispatch
-    const dispatch = useDispatch();
 
     // props
     const { history, filterGroupBy, filterMonth } = props;
@@ -36,47 +33,77 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
 
     useEffect(() => {
         getTransactionDetail();
+        if (filterGroupBy || filterMonth) {
+            resetTransactionFilter();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterGroupBy, filterMonth])
 
-    const getTransactionDetail = async () => {
-        try {
-            setIsLoading(true);
-            const userToken = sessionStorage.getItem('userToken');
-            const response: any = await transactionAxios(`gettransactionDetail?userId=${userInfo.id}&year=${new Date().getFullYear()}&groupBy=${filterGroupBy || ''}&month=${FullMonth[Number(filterMonth)] || ''}&visitedMonth=${nextMonthIndex}`, {
-                headers: {
-                    'x-powered-token': userToken || ''
-                }
-            });
-            if (response && response.data && response.data.status === 'Success') {
-                if (response.data.transactionDetail) {
-                    const { transactionDetail, hasMoreData, nextMonthIndex } = response.data;
-                    setHasMoreData(hasMoreData);
-                    setNextMonthIndex(+nextMonthIndex);
-                    dispatch({
-                        type: 'SET_TRANSACTION_DETAILS',
-                        transactionDetail
-                    })
 
+    useEffect(() => {
+        if (!filterGroupBy && !filterMonth) {
+            setTransactionData({ monthHistory: [] });
+        }
+    }, [filterGroupBy, filterMonth])
+
+
+    const resetTransactionFilter = () => {
+        setNextMonthIndex(0);
+        setisTransactionDataToLoad(true);
+    }
+
+    const getTransactionDetail = async () => {
+        if (isTransactionDataToLoad || filterMonth || filterGroupBy) {
+            try {
+                setIsLoading(true);
+                const userToken = sessionStorage.getItem('userToken');
+                const response: any = await transactionAxios(`gettransactionDetail?userId=${userInfo.id}&year=${new Date().getFullYear()}&groupBy=${filterGroupBy || ''}&month=${FullMonth[Number(filterMonth)] || ''}&visitedMonth=${nextMonthIndex}`, {
+                    headers: {
+                        'x-powered-token': userToken || ''
+                    }
+                });
+                if (response && response.data && response.data.status === 'Success') {
+                    if (response.data.transactionDetail) {
+                        const { transactionDetail, hasMoreData, nextMonthIndex } = response.data;
+                        if (!filterMonth && !filterGroupBy) {
+                            setNextMonthIndex(nextMonthIndex);
+                            setisTransactionDataToLoad(hasMoreData);
+                            setTransactionData((prevValue) => {
+                                let transactionData = JSON.parse(JSON.stringify(prevValue));
+                                transactionData.monthHistory = [
+                                    ...transactionData.monthHistory,
+                                    ...transactionDetail.monthHistory
+                                ];
+                                return transactionData;
+                            });
+                        }
+                        else {
+                            setTransactionData((prevValue) => {
+                                let transactionData = JSON.parse(JSON.stringify(prevValue));
+                                transactionData = transactionDetail;
+                                return transactionData;
+                            });
+                        }
+                    }
                 }
             }
-        }
-        catch (err: any) {
-            if (err && err.response && err.response.data) {
-                const { message } = err.response.data;
-                if (message === 'InvalidToken') {
-                    setApiErrorMessage('Invalid Token, User not Authenticated');
-                    sessionStorage.removeItem('userToken');
-                    setTimeout(() => {
-                        history.push('/');
-                    }, 3000)
+            catch (err: any) {
+                if (err && err.response && err.response.data) {
+                    const { message } = err.response.data;
+                    if (message === 'InvalidToken') {
+                        setApiErrorMessage('Invalid Token, User not Authenticated');
+                        sessionStorage.removeItem('userToken');
+                        setTimeout(() => {
+                            history.push('/');
+                        }, 3000)
+                    }
+                    else setApiErrorMessage('Error while getting transaction detail');
                 }
                 else setApiErrorMessage('Error while getting transaction detail');
             }
-            else setApiErrorMessage('Error while getting transaction detail');
-        }
-        finally {
-            setIsLoading(false);
+            finally {
+                setIsLoading(false);
+            }
         }
     }
 
@@ -86,14 +113,14 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
         }
         loadMoreRef.current = new IntersectionObserver((entries) => {
             const [entry] = entries;
-            if (entry.isIntersecting && hasMoreData) {
+            if (entry.isIntersecting && isTransactionDataToLoad) {
                 getTransactionDetail();
             }
         });
         if (monthContainer) loadMoreRef.current.observe(monthContainer);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasMoreData, nextMonthIndex])
+    }, [isTransactionDataToLoad, nextMonthIndex])
 
 
     const handleErrorMessage = () => {
@@ -108,8 +135,7 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                 handleMessageModel={handleErrorMessage}
             />
         </Fragment>
-    )
-
+    );
 
     return (
         <Fragment>
@@ -125,13 +151,13 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
                     <div className="finance_transaction_detail_container">
                         {
                             (
-                                Object.keys(transactionDetail).length > 0 &&
-                                transactionDetail.monthHistory &&
-                                transactionDetail.monthHistory.length > 0
+                                transactionData &&
+                                transactionData.monthHistory &&
+                                transactionData.monthHistory.length > 0
                             ) ?
-                                transactionDetail.monthHistory.map((monthInfo: any, index: any) => (
+                                transactionData.monthHistory.map((monthInfo: any, index: any) => (
                                     <Fragment key={index}>
-                                        <div ref={(index === transactionDetail.monthHistory.length - 1) ? monthObserver : null}>
+                                        <div ref={((!filterMonth && !filterGroupBy) && (index === transactionData.monthHistory.length - 1)) ? monthObserver : null}>
                                             {
                                                 monthInfo &&
                                                 monthInfo.dateHistory.length > 0 &&

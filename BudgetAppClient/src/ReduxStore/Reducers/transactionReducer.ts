@@ -2,7 +2,9 @@ import {
     SET_TRANSACTION_OVERVIEW,
     SET_IS_FILTER_ENABLED,
     SET_TRANSACTION_DETAILS,
-    SET_VISITED_MONTH
+    SET_NEXT_MONTH_INDEX,
+    SET_IS_TRANSACTION_DATA_TO_LOAD,
+    SET_FILTERED_TRANSACTION
 } from '../Types';
 
 type TransactionReducer = {
@@ -12,7 +14,8 @@ type TransactionReducer = {
     balance: string | number,
     isFilterEnabled: number,
     transactionDetail: { [key: string]: any },
-    visitedMonth: number
+    nextMonthIndex: number,
+    isTransactionDataToLoad: boolean
 }
 
 const initialState: TransactionReducer = {
@@ -21,7 +24,8 @@ const initialState: TransactionReducer = {
     investment: 0,
     balance: 0,
     isFilterEnabled: 0,
-    visitedMonth: 0,
+    nextMonthIndex: 0,
+    isTransactionDataToLoad: true,
     transactionDetail: { monthHistory: [] }
 };
 
@@ -52,10 +56,22 @@ export default function transactionReducer(state = initialState, action: { [key:
                 ...state,
                 transactionDetail
             }
-        case SET_VISITED_MONTH:
+        case SET_FILTERED_TRANSACTION:
+            let filteredTransaction = JSON.parse(JSON.stringify(state.transactionDetail));
+            filteredTransaction = action.transactionDetail
             return {
                 ...state,
-                visitedMonth: action.visitedMonth
+                transactionDetail: filteredTransaction
+            }
+        case SET_NEXT_MONTH_INDEX:
+            return {
+                ...state,
+                nextMonthIndex: action.nextMonthIndex
+            }
+        case SET_IS_TRANSACTION_DATA_TO_LOAD:
+            return {
+                ...state,
+                isTransactionDataToLoad: action.isTransactionDataToLoad
             }
         default: return state;
     }
