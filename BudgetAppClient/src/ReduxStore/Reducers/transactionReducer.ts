@@ -1,10 +1,9 @@
 import {
     SET_TRANSACTION_OVERVIEW,
     SET_IS_FILTER_ENABLED,
-    SET_TRANSACTION_DETAILS,
-    SET_NEXT_MONTH_INDEX,
-    SET_IS_TRANSACTION_DATA_TO_LOAD,
-    SET_FILTERED_TRANSACTION
+    SET_TRANSACTION_DATA,
+    SET_CURRENT_FILTER_GROUP_BY,
+    SET_CURRENT_FILTER_MONTH
 } from '../Types';
 
 type TransactionReducer = {
@@ -13,9 +12,9 @@ type TransactionReducer = {
     investment: string | number,
     balance: string | number,
     isFilterEnabled: number,
-    transactionDetail: { [key: string]: any },
-    nextMonthIndex: number,
-    isTransactionDataToLoad: boolean
+    currentFilterMonth: string,
+    currentFilterGroupBy: string,
+    transactionData: { [key: string]: any }
 }
 
 const initialState: TransactionReducer = {
@@ -24,9 +23,9 @@ const initialState: TransactionReducer = {
     investment: 0,
     balance: 0,
     isFilterEnabled: 0,
-    nextMonthIndex: 0,
-    isTransactionDataToLoad: true,
-    transactionDetail: { monthHistory: [] }
+    currentFilterMonth: '',
+    currentFilterGroupBy: '',
+    transactionData: { monthHistory: [] }
 };
 
 
@@ -46,32 +45,22 @@ export default function transactionReducer(state = initialState, action: { [key:
                 ...state,
                 isFilterEnabled: state.isFilterEnabled + action.value
             }
-        case SET_TRANSACTION_DETAILS:
-            let transactionDetail = JSON.parse(JSON.stringify(state.transactionDetail));
-            transactionDetail.monthHistory = [
-                ...transactionDetail.monthHistory,
-                ...action.transactionDetail.monthHistory
-            ]
+        case SET_TRANSACTION_DATA:
+            let transactionData = JSON.parse(JSON.stringify(state.transactionData));
+            transactionData = action.transactionData;
             return {
                 ...state,
-                transactionDetail
+                transactionData
             }
-        case SET_FILTERED_TRANSACTION:
-            let filteredTransaction = JSON.parse(JSON.stringify(state.transactionDetail));
-            filteredTransaction = action.transactionDetail
+        case SET_CURRENT_FILTER_MONTH:
             return {
                 ...state,
-                transactionDetail: filteredTransaction
+                currentFilterMonth: action.filterMonth
             }
-        case SET_NEXT_MONTH_INDEX:
+        case SET_CURRENT_FILTER_GROUP_BY:
             return {
                 ...state,
-                nextMonthIndex: action.nextMonthIndex
-            }
-        case SET_IS_TRANSACTION_DATA_TO_LOAD:
-            return {
-                ...state,
-                isTransactionDataToLoad: action.isTransactionDataToLoad
+                currentFilterGroupBy: action.filterGroupBy
             }
         default: return state;
     }

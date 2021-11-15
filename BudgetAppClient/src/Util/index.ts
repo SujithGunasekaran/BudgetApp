@@ -3,6 +3,11 @@ interface objectKey {
     [key: string]: any
 }
 
+export const currentDateValue = new Date().getDate();
+
+export const currentMonthValue = new Date().getMonth();
+
+export const currentYearValue = new Date().getFullYear();
 
 export const FullMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

@@ -34,7 +34,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
 
     // redux-state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
-    const { isFilterEnabled } = useSelector((state: RootState) => state.transactionReducer);
+    const { currentFilterGroupBy, currentFilterMonth } = useSelector((state: RootState) => state.transactionReducer);
 
     // dispatch
     const dispatch = useDispatch();
@@ -79,11 +79,11 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                     }
                 });
                 if (response && response.data && response.data.status === 'Success') {
-                    const { transactionOverview, transactionHistory } = response.data;
-                    if (isFilterEnabled === 0) {
+                    const { transactionOverview, transactionDetail } = response.data;
+                    if (!currentFilterGroupBy && !currentFilterMonth) {
                         dispatch({
-                            type: 'SET_TRANSACTION_DETAILS',
-                            transactionDetail: transactionHistory
+                            type: 'SET_TRANSACTION_DATA',
+                            transactionData: transactionDetail
                         })
                     }
                     dispatch({

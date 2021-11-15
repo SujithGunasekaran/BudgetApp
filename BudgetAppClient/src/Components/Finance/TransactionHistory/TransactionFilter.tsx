@@ -1,28 +1,24 @@
 import React, { Fragment, FC, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../../../UI/Icon';
 import { transactionType, FullMonthNameList, FullMonthName } from '../../../Util/DropdownInfo';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../ReduxStore/Reducers';
 
-type TransactionFilterProps = {
-    history?: any,
-    filterGroupBy: string | undefined,
-    filterMonth: string | undefined,
-    setFilterGroupBy: React.Dispatch<React.SetStateAction<string | undefined>>,
-    setFilterMonth: React.Dispatch<React.SetStateAction<string | undefined>>,
-    handleFilterOptions: (inputValue: string | undefined, stateSetterCallback: React.Dispatch<React.SetStateAction<string | undefined>>, isStateNeedToBeUpdated: boolean) => void
-}
 
-const TransactionFilter: FC<TransactionFilterProps> = (props) => {
+const TransactionFilter: FC = () => {
 
     // ref
     const groupByRef = useRef(null);
     const monthRef = useRef(null);
 
-    // props
-    const { filterGroupBy, filterMonth, setFilterGroupBy, setFilterMonth, handleFilterOptions, } = props;
+
+    // redux-state
+    const { currentFilterGroupBy, currentFilterMonth } = useSelector((state: RootState) => state.transactionReducer);
+
 
     // dispatch
     const dispatch = useDispatch();
+
 
     const handleCustomDropDown = (parentRef: { [key: string]: any }) => {
         if (parentRef.current) {
@@ -34,35 +30,47 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
     const handleFilterGroupBy = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
         if (e !== null && e.target instanceof HTMLElement) {
             const element = e.target;
-            handleFilterOptions(element.dataset.value, setFilterGroupBy, false);
             handleCustomDropDown(parentRef);
             dispatch({
-                type: 'SET_IS_FILTER_ENABLED',
-                value: 1
-            })
+                type: 'SET_CURRENT_FILTER_GROUP_BY',
+                filterGroupBy: element.dataset.value
+            });
         }
     }
 
     const handleFilterMonth = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
         if (e !== null && e.target instanceof HTMLElement) {
             const element = e.target;
-            handleFilterOptions(element.dataset.value, setFilterMonth, false);
             handleCustomDropDown(parentRef);
             dispatch({
-                type: 'SET_IS_FILTER_ENABLED',
-                value: 1
-            })
+                type: 'SET_CURRENT_FILTER_MONTH',
+                filterMonth: element.dataset.value
+            });
         }
     }
 
+    const removeFilterGroupBy = () => {
+        dispatch({
+            type: 'SET_CURRENT_FILTER_GROUP_BY',
+            filterGroupBy: ''
+        });
+    }
 
-    const renderFilteredOption = (displayName: string | undefined, callback: React.Dispatch<React.SetStateAction<string | undefined>>) => (
+    const removeFilterMonth = () => {
+        dispatch({
+            type: 'SET_CURRENT_FILTER_MONTH',
+            filterMonth: ''
+        })
+    }
+
+
+    const renderFilteredOption = (displayName: string | undefined, callback: () => void) => (
         <div className="col-md-2">
             <div className="finance_filter_selected_option_container">
                 <div className="name">{displayName}</div>
                 <CancelIcon
                     cssClass="icon"
-                    handleEvent={() => handleFilterOptions(undefined, callback, true)}
+                    handleEvent={() => callback()}
                 />
             </div>
         </div>
@@ -73,10 +81,10 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
             <div className="finance_filter_container">
                 <div className="row" style={{ alignItems: 'center' }}>
                     {
-                        filterGroupBy && renderFilteredOption(filterGroupBy, setFilterGroupBy)
+                        currentFilterGroupBy && renderFilteredOption(currentFilterGroupBy, removeFilterGroupBy)
                     }
                     {
-                        filterMonth && renderFilteredOption(FullMonthName[Number(filterMonth)], setFilterMonth)
+                        currentFilterMonth && renderFilteredOption(FullMonthName[Number(currentFilterMonth)], removeFilterMonth)
                     }
                     <div className="col-md-2">
                         <div className="finance_filter_custom_dropdown">
@@ -85,7 +93,7 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
                                     className="model_custom_dropdown_value"
                                     placeholder="Group By"
                                     readOnly
-                                    value={filterGroupBy || ''}
+                                    value={currentFilterGroupBy || ''}
                                 />
                                 <DropDownIcon cssClass="model_custom_dropdown_icon" />
                             </div>
@@ -107,7 +115,7 @@ const TransactionFilter: FC<TransactionFilterProps> = (props) => {
                                     className="model_custom_dropdown_value"
                                     placeholder="Month"
                                     readOnly
-                                    value={FullMonthName[Number(filterMonth)] || ''}
+                                    value={currentFilterMonth ? FullMonthName[Number(currentFilterMonth)] : ''}
                                 />
                                 <DropDownIcon cssClass="model_custom_dropdown_icon" />
                             </div>
