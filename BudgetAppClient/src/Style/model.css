@@ -20,10 +20,10 @@
 .model_confirm_header_name
 {
     color: var(--title-heading);
-    font-size: 1.1rem;
-    font-weight: 500;
-    word-spacing: 1px;
-    font-family: var(--font-family-sans-serif);
+    font-size: 1.050rem;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
+    font-family: var(--font-family-roboto);
 }
 .model_confirm_footer_container
 {
@@ -41,7 +41,7 @@
     color: var(--title-highlight);
     font-size: .950rem;
     font-weight: 400;
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
     background-color: var(--btn-highlight-bg);
 }
 .model_confirm_success_btn:disabled:hover
@@ -76,7 +76,7 @@
     color: var(--title-highlight);
     font-size: .950rem;
     font-weight: 400;
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
     background-color: var(--btn-disabled-bg);
     transition: 0.4s all ease-in-out;
 }
@@ -121,7 +121,7 @@
     color: var(--title-heading);
     font-size: 1.2rem;
     font-weight: 600;
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-roboto);
 }
 .model_header_icon
 {
@@ -148,9 +148,9 @@
     padding: 8px 9px;
     font-size: .950rem;
     font-weight: 400;
-    letter-spacing: 0.010rem;
+    letter-spacing: 0.015rem;
     color: var(--form-input-text);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
     background-color: var(--form-input-bg);
     border: 1px solid var(--form-input-border);
     transition: 0.4s all ease-in-out;
@@ -174,7 +174,7 @@
     padding: 10px 0px;
     color: var(--title-light);
     font-weight: 500;
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-roboto);
     background-color: var(--btn-highlight-bg);
     transition: 0.4s all ease-in-out;
 }
@@ -217,10 +217,10 @@
     border: none;
     font-size: .950rem;
     font-weight: 400;
-    letter-spacing: 0.010rem;
+    letter-spacing: 0.015rem;
     color: var(--form-input-text);
     background-color: var(--form-input-bg);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
     cursor: pointer;
 }
 .model_custom_dropdown_value:focus
@@ -281,9 +281,10 @@
 {
     padding: 10px 10px;
     font-size: .930rem;
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
     color: var(--title-heading);
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-roboto);
     transition: 0.4s all ease-in-out;
 }
 .model_custom_dropdown_item:hover

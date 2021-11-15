@@ -31,35 +31,35 @@
 
     /* Dark Theme */
 
-    --body-bg : black;
-    --header-bg : #242526;
-    --form-input-bg : #18191a;
+    --body-bg : #121418;
+    --header-bg : #17181F;
+    --form-input-bg : #121418;
     --form-input-border : #3B3B3B;
-    --form-focus-border : #4D9EEA;
+    --form-focus-border : #0067FF;
     --form-input-text : #fff;
     --form-text-placeholder : #8a8f98;
-    --icon-bg : rgb(77,158,234, 0.150);
-    --icon-color : #4D9EEA;
+    --icon-bg : #132541;
+    --icon-color : #0068FF;
     --icon-dark-color : #929699;
-    --btn-highlight-bg : #1D9BF0;
-    --btn-highlight-hover-bg : #3090eb;
+    --btn-highlight-bg : #0067FF;
+    --btn-highlight-hover-bg : #035ce2;
     --btn-danger-bg : #ff5a4e;
     --btn-danger-hover-bg : #fa483b;
-    --btn-disabled-bg : #8b8b8d;
+    --btn-disabled-bg : #6d6d6d;
     --text-bg : #18191a;
-    --text-highlight-dark : #1D9BF0;
+    --text-highlight-dark : #0067FF;
     --title-dark : #333333;
     --title-heading : #A1A1A6;
     --title-highlight : #fafafa;
     --title-light : #dededf;
     --title-sub-heading : #8a8f98;
-    --container-light-blue-bg : rgb(77,158,234, 0.150);
-    --card-bg-grey : #2b2b2b;
-    --card-bg : #161616;
+    --container-light-blue-bg : #0e1a2e;
+    --card-bg-grey : #1E222D;
+    --card-bg : #1A1E23;
     --card-light-dark : rgb(52, 52, 53);
-    --card-border : #161616;
-    --dropdown-values-bg : rgb(77,158,234, 0.150);
-    --dropdown-values-color : #1D9BF0;
+    --card-border : #1A1E23;
+    --dropdown-values-bg : #0e1a2e;
+    --dropdown-values-color : #0068FF;
     --scroll-border : rgb(109, 108, 108);
 
 
@@ -81,7 +81,7 @@
     --font-family-inter-font : 'Inter', sans-serif;
     --font-family-sans-serif: "BlinkMacSystemFont","Segoe UI","Roboto","Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     --font-family-monospace: "Liberation Mono","SFMono-Regular","Menlo,Monaco","Consolas","Courier New",monospace;
-
+    --font-family-roboto : 'Roboto', sans-serif;
 }
 
 .body
@@ -110,3 +110,4 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');

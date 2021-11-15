@@ -26,12 +26,12 @@
 }
 .finance_top_header_info_sub
 {
-    padding-top: 5px;
-    font-size: .850rem;
-    font-weight: 500;
-    letter-spacing: 0.010rem;
+    padding-top: 7px;
+    font-size: .880rem;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
     color: var(--title-sub-heading);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
 }
 .finance_top_header_info_child_two
 {
@@ -65,9 +65,10 @@
 {
     padding-left: 10px;
     font-size: .920rem;
-    font-weight: 600;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
     color: var(--title-heading);
-    font-family: var(--font-family-inter-font);
+    font-family: var(--font-family-roboto);
     transition: 0.4s all ease-in-out;
 }
 .finance_top_header_heading:hover
@@ -113,7 +114,7 @@
     font-weight: 700;
     letter-spacing: 0.010rem;
     color: var(--title-light);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
     transition: 0.4s all ease-in-out;
 }
 
@@ -278,7 +279,7 @@
     padding: 15px 5px;
     margin: 0px 0px 10px 0px;
     font-size: .9rem;
-    font-weight: var(--font-family-sans-serif);
+    font-weight: var(--font-family-roboto);
     color: var(--title-heading);
     background-color: var(--body-bg);
 }
@@ -306,16 +307,16 @@
     padding: 5px 0px;
     font-size: 1.220rem;
     font-weight: 700;
-    letter-spacing: 0.010rem;
-    font-family: var(--font-family-sans-serif);
+    letter-spacing: 0.020rem;
+    font-family: var(--font-family-roboto);
     color: var(--title-light);
 }
 .finance_transaction_detail_item_info_container .category_container .type
 {
     font-size: .800rem;
-    font-weight: 500;
-    letter-spacing: 0.010rem;
-    font-family: var(--font-family-sans-serif);
+    font-weight: 400;
+    letter-spacing: 0.015rem;
+    font-family: var(--font-family-roboto);
     color: var(--title-sub-heading);
 }
 .finance_transaction_detail_item_info_container .icon
@@ -326,24 +327,6 @@
     border-radius: 50%;
     font-size: 1.1rem;
     color: var(--title-heading);
-}
-.finance_transaction_detail_item_info_container .type
-{
-    font-size: .800rem;
-    font-weight: 400;
-    font-family: var(--font-family-sans-serif);
-}
-.finance_transaction_detail_item_info_container .type.income
-{
-    color: var(--success-alert-text);
-}
-.finance_transaction_detail_item_info_container .type.expenses
-{
-    color: var(--danger-alert-text);
-}
-.finance_transaction_detail_item_info_container .type.investment
-{
-    color: var(--info-alert-text);
 }
 .finance_transaction_detail_item_description_container
 {
@@ -368,17 +351,19 @@
     font-weight: 500;
     letter-spacing: 0.020rem;
     color: var(--title-highlight);
-    font-family: var(--font-family-sans-serif);
+    font-family: var(--font-family-roboto);
 }
 .finance_transaction_detail_item_amount_container .amount.income
 {
+    padding: 7px;
+    border-radius: 6px;
+    background-color: var(--success-alert-bg);
     color: var(--success-alert-text);
 }
 .finance_transaction_detail_item_amount_container .amount.expenses
 {
+    padding: 7px;
+    border-radius: 6px;
+    background-color: var(--danger-alert-bg);
     color: var(--danger-alert-text);
-}
-.finance_transaction_detail_item_amount_container .amount.investment
-{
-    color: var(--info-alert-text);
 }

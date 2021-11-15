@@ -14,8 +14,8 @@
 {
     font-size: .9rem;
     font-weight: 400;
-    letter-spacing: 0.010rem;
-    font-family: var(--font-family-sans-serif);
+    letter-spacing: 0.015rem;
+    font-family: var(--font-family-roboto);
 }
 .message_cancel
 {
