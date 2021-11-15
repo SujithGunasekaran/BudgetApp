@@ -226,6 +226,24 @@ const createNewMonthInYear = async (inputData: objectKeys, userId: any, previous
     return result;
 }
 
+const getTransactionDataByMonth = async (objectTypeUserId: any, month: string, year: string) => {
+    const transactionData = await TransactionModel.findOne(
+        {
+            userId: objectTypeUserId,
+            year,
+            'transactionHistory.monthHistory': {
+                $elemMatch: {
+                    month
+                }
+            }
+        },
+        {
+            'transactionHistory.monthHistory.$': 1
+        }
+    );
+    return transactionData;
+}
+
 export const addTransaction = async (req: Request, res: Response) => {
     try {
         const { userId } = req.query;
@@ -236,10 +254,12 @@ export const addTransaction = async (req: Request, res: Response) => {
         if (!userTransactionHistory) {
             let savedData = createNewEnrtyInTransaction(req.body, userId);
             savedData = await TransactionModel.create(savedData);
+            const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
+            if (!savedData || transactionData) throw new Error('Error while adding data');
             res.status(200).json({
                 status: 'Success',
                 message: 'Transaction added Successfully',
-                transactionHistory: savedData.transactionHistory,
+                transactionDetail: transactionData.transactionHistory,
                 transactionOverview: {
                     income: savedData.income,
                     expenses: savedData.expenses,
@@ -269,12 +289,13 @@ export const addTransaction = async (req: Request, res: Response) => {
             );
             if (dateData) {
                 const transactionResult: ValidAndInvalidResult = await addTransactionInfoToDate(req.body, userId, dateData);
+                const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
                 const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
-                if (!isTransactionAdded) throw new Error('Error while adding Transaction');
+                if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
                     message: 'Transaction added Successfully',
-                    transactionHistory,
+                    transactionDetail: transactionData.transactionHistory,
                     transactionOverview: {
                         income: transactionOverview.income,
                         expenses: transactionOverview.expenses,
@@ -287,11 +308,12 @@ export const addTransaction = async (req: Request, res: Response) => {
             else {
                 const transactionResult: ValidAndInvalidResult = await createNewDateInMonth(req.body, userId, monthData);
                 const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
-                if (!isTransactionAdded) throw new Error('Error while adding Transaction');
+                const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
+                if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
                     message: 'Transaction added Successfully',
-                    transactionHistory,
+                    transactionDetail: transactionData.transactionHistory,
                     transactionOverview: {
                         income: transactionOverview.income,
                         expenses: transactionOverview.expenses,
@@ -305,11 +327,12 @@ export const addTransaction = async (req: Request, res: Response) => {
         else {
             const transactionResult: ValidAndInvalidResult = await createNewMonthInYear(req.body, userId, userTransactionHistory);
             const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
-            if (!isTransactionAdded) throw new Error('Error while adding Transaction');
+            const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
+            if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
             res.status(200).json({
                 status: 'Success',
                 message: 'Transaction added Successfully',
-                transactionHistory,
+                transactionDetail: transactionData.transactionHistory,
                 transactionOverview: {
                     income: transactionOverview.income,
                     expenses: transactionOverview.expenses,
@@ -356,39 +379,13 @@ export const getTransactionOverview = async (req: Request, res: Response) => {
 }
 
 
-const getMonthCount = async (userId: any, year: any) => {
-    const monthCount = await TransactionModel.aggregate([
-        {
-            $match: {
-                userId,
-                year
-            }
-        },
-        {
-            $project: {
-                count: {
-                    $size: '$transactionHistory.monthHistory'
-                }
-            }
-        }
-    ]);
-    return monthCount.length > 0 ? monthCount[0].count : 0;
-}
 
 export const getTransactionDetail = async (req: Request, res: Response) => {
     try {
-        const { year, groupBy, userId, month, visitedMonth } = req.query;
+        const { year, groupBy, userId, month } = req.query;
         const userInfoId: any = userId;
-        let visitedMonthLength: any = visitedMonth;
         const objectTypeUserId = new mongoose.Types.ObjectId(userInfoId);
         let transactionData;
-        let monthCount = await getMonthCount(objectTypeUserId, year);
-        let hasMoreData = (Number(visitedMonthLength) < monthCount - 2) ? true : false;
-        let nextMonthIndex = (Number(visitedMonthLength) < monthCount - 2) ? Number(visitedMonthLength) + 2 : Number(visitedMonthLength);
-        if (!month && !groupBy) {
-            transactionData = await TransactionModel.findOne({ userId: objectTypeUserId, year }, { 'transactionHistory.monthHistory': { $slice: [Number(visitedMonth), 2] } });
-            if (!transactionData) throw new Error('Error while getting transaction data');
-        }
         if (month && !groupBy) {
             transactionData = await TransactionModel.findOne(
                 {
@@ -549,8 +546,6 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             status: 'Success',
-            hasMoreData,
-            nextMonthIndex,
             transactionDetail: transactionData.transactionHistory
         });
         return;
