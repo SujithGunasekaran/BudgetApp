@@ -1,5 +1,6 @@
 import React, { Fragment, FC } from 'react';
 import { transactionCategoryInput } from '../../Util/JsonInput';
+import { DownArrowIcon } from '../Icon';
 
 interface objectKeys {
     [key: string]: any
@@ -15,6 +16,16 @@ const TransactionDetailItem: FC<TransactionDetailItemProps> = (props) => {
 
     // props
     const { dateInfo, monthInfo } = props;
+
+    const handleDescriptionDiv = (e: React.MouseEvent<HTMLDivElement | MouseEvent>) => {
+        if (e && e.target instanceof HTMLElement) {
+            const descriptionElement = e.target.nextElementSibling;
+            if (descriptionElement && !descriptionElement?.classList.contains('show')) {
+                descriptionElement.classList.add('show');
+            }
+            else descriptionElement?.classList.remove('show');
+        }
+    }
 
     return (
         <Fragment>
@@ -38,6 +49,21 @@ const TransactionDetailItem: FC<TransactionDetailItemProps> = (props) => {
                                         <div className="category_container">
                                             <div className="category">{transactionInfo.transactionCategory}</div>
                                             <div className="type">{transactionInfo.transactiontype}</div>
+                                            {
+                                                transactionInfo.description &&
+                                                <Fragment>
+                                                    <div data-descriptionid={index} className="finance_transaction_detail__item_description_container" onClick={(e) => handleDescriptionDiv(e)}>
+                                                        Notes
+                                                        <DownArrowIcon
+                                                            cssClass="icon"
+                                                        />
+                                                    </div>
+                                                    <div data-descriptionid={index} className="description_container">
+                                                        {transactionInfo.description}
+                                                    </div>
+                                                </Fragment>
+                                            }
+
                                         </div>
                                     </div>
                                     <div className="finance_transaction_detail_item_amount_container">

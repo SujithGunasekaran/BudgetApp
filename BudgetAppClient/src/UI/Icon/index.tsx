@@ -87,4 +87,17 @@ export const DotIcon = (input: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className={`bi bi-dot ${input.cssClass}`} viewBox="0 0 16 16">
         <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
     </svg>
+);
+
+
+export const DownArrowIcon = (input: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className={`bi bi-caret-down ${input.cssClass}`} viewBox="0 0 16 16">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z" />
+    </svg>
+);
+
+export const HamBurgerIcon = (input: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className={`bi bi-list ${input.cssClass}`} viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+    </svg>
 )

@@ -1,7 +1,7 @@
 import React, { FC, Fragment, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { PersonIcon, LogoutIcon } from '../UI/Icon';
+import { PersonIcon, LogoutIcon, HamBurgerIcon, CancelIcon } from '../UI/Icon';
 import { useSelector } from 'react-redux';
 import { RootState } from '../ReduxStore/Reducers';
 
@@ -18,6 +18,7 @@ const Header: FC<HeaderProps> = (props) => {
     // react-state
     const [showLogoutModel, setShowLogoutModel] = useState<boolean>(false);
     const [logoutLoader, setLogoutLoader] = useState<boolean>(false);
+    const [showMenuList, setShowMenuList] = useState<boolean>(false);
 
     // props
     const { location, history } = props;
@@ -79,6 +80,11 @@ const Header: FC<HeaderProps> = (props) => {
                         <Link to="/home" className={`header_menu_item ${location.pathname === '/home' && 'active'}`}>Overview</Link>
                         <Link to="/finance" className={`header_menu_item ${location.pathname === '/finance' && 'active'}`}>Finance</Link>
                     </div>
+                    <div className="header_menu_mobile_container" onClick={() => setShowMenuList(true)}>
+                        <HamBurgerIcon
+                            cssClass="header_menu_mobile_hamburger_icon"
+                        />
+                    </div>
                     <div className="header_user_info_container">
                         <div className="header_user_info_name" onClick={(e) => showUserModel(e, userModelRef)}>{userInfo?.userName ?? ''}</div>
                         <div className="header_user_info_logo_bg" onClick={(e) => showUserModel(e, userModelRef)}>
@@ -115,6 +121,23 @@ const Header: FC<HeaderProps> = (props) => {
                             loader={logoutLoader}
                         />
                     </Suspense>
+                </div>
+            }
+            {
+                showMenuList &&
+                <div className="overlay">
+                    <div className="header_mobile_menu_list_container">
+                        <div className="header_mobile_menu_list_top">
+                            <CancelIcon
+                                cssClass="icon"
+                                handleEvent={() => setShowMenuList(false)}
+                            />
+                        </div>
+                        <div className="header_mobile_menu_list_info" onClick={() => setShowMenuList(false)}>
+                            <Link to="/home" className={`header_mobile_menu_item ${location.pathname === '/home' && 'active'}`}>Overview</Link>
+                            <Link to="/finance" className={`header_mobile_menu_item ${location.pathname === '/finance' && 'active'}`}>Finance</Link>
+                        </div>
+                    </div>
                 </div>
             }
         </Fragment>

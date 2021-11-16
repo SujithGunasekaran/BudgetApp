@@ -42,21 +42,21 @@ const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
                     <div className="finance_top_header_info_sub">Transaction for {currentFilterMonth ? FullMonth[Number(currentFilterMonth)] : FullMonth[monthYearDetail.month]} {monthYearDetail.year}.</div>
                 </div>
                 <div className="finance_top_header_info_child_two">
-                    <div className="finance_top_header_info_container">
+                    <div className="finance_top_header_info_container" onClick={() => handleTransactionView(true)}>
                         <div className="finance_top_header_logo_bg">
                             <AddIcon
                                 cssClass="finance_top_header_logo"
                             />
                         </div>
-                        <div className="finance_top_header_heading" onClick={() => handleTransactionView(true)}>Add Transaction</div>
+                        <div className="finance_top_header_heading">Add Transaction</div>
                     </div>
-                    <div className="finance_top_header_info_container">
+                    <div className="finance_top_header_info_container" onClick={() => handleCalCulatorView(true)}>
                         <div className="finance_top_header_logo_bg">
                             <CalculatorIcon
                                 cssClass="finance_top_header_logo"
                             />
                         </div>
-                        <div className="finance_top_header_heading" onClick={() => handleCalCulatorView(true)}>Calculator</div>
+                        <div className="finance_top_header_heading">Calculator</div>
                     </div>
                 </div>
                 {
