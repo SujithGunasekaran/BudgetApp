@@ -293,3 +293,11 @@
     background-color: var(--dropdown-values-bg);
     color: var(--dropdown-values-color);
 }
+
+@media(max-width : 440px) {
+    .model_confirm_container ,
+    .model_container
+    {
+        width: 95%;
+    }
+}

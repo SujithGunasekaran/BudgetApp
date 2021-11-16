@@ -77,6 +77,12 @@
     cursor: pointer;
 }
 
+@media(max-width : 450px) {
+    .finance_top_header_heading {
+        display: none;
+    }
+}
+
 
 /* Finance Traction  */
 
@@ -88,6 +94,7 @@
 {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
+    margin: 10px 0px;
     padding: 25px 20px;
     border-radius: 10px;
 }
@@ -213,6 +220,12 @@
     color: var(--icon-color);
 }
 
+@media(max-width : 440px) {
+    .finance_filter_selected_option_container {
+        margin: 8px 0px;
+    }
+}
+
 /* finance transaction detail */
 
 .finance_transaction_detail_container
@@ -296,6 +309,7 @@
 {
     display: flex;
     align-items: center;
+    transition: 0.4s all ease-in-out;
 }
 .finance_transaction_detail_item_info_container .category_container
 {
@@ -347,7 +361,6 @@
 }
 .finance_transaction_detail_item_amount_container .amount
 {
-    font-size: 1.060rem;
     font-weight: 500;
     letter-spacing: 0.020rem;
     color: var(--title-highlight);
@@ -367,3 +380,64 @@
     background-color: var(--danger-alert-bg);
     color: var(--danger-alert-text);
 }
+
+.finance_transaction_detail__item_description_container
+{
+    display: flex;
+    align-items: center;
+    padding: 9px 0px;
+    font-size: .800rem;
+    letter-spacing: 0.015rem;
+    font-family: var(--font-family-roboto);
+    color: var(--text-highlight-dark);
+    cursor: pointer;
+    transition: 0.4s all ease-in-out;
+}
+.finance_transaction_detail__item_description_container .icon
+{
+    margin : 3.5px 0px 0px 3px;
+    width: 13px;
+    height: 13px;
+    color: var(--icon-color);
+}
+
+.finance_transaction_detail__item_description_container + .description_container
+{
+    padding: 10px;
+    display: none;
+    border-radius: 8px;
+    font-size: .820rem;
+    letter-spacing: 0.015rem;
+    max-width: 450px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-family-roboto);
+    color: var(--title-sub-heading);
+    background-color: var(--body-bg);
+}
+.finance_transaction_detail__item_description_container + .description_container.show
+{
+    display: block;
+}
+
+@media(max-width: 450px) {
+    .finance_transaction_datail_item {
+        padding: 25px 10px;
+    }
+    .finance_transaction_detail__item_description_container + .description_container
+    {
+        width: 150px;
+    }
+    .finance_transaction_detail_item_amount_container .amount
+    {
+        font-size: .850rem;
+    }
+    .finance_transaction_detail_item_info_container .category_container .category 
+    {
+        font-size: .970rem;
+        letter-spacing: 0.015rem;
+        width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+} 

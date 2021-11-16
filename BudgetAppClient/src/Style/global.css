@@ -97,6 +97,10 @@
     scroll-behavior: smooth;
 }
 
+@media(max-width: 440px) {
+    .body-main { padding: 15px 0px; } 
+}
+
 .overlay 
 {
     position: fixed;
