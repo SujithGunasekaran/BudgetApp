@@ -36,18 +36,25 @@ export const checkIsUserTokenValid = async (req: Request, res: Response, next: N
 
 const calculateTransaction = (transactionType: String, amount: String, transactionData: objectKeys) => {
     let { income = 0, expenses = 0, investment = 0, balance = 0 } = transactionData;
+    let { monthIncome = 0, monthExpenses = 0, monthInvestment = 0, monthBalance = 0 } = (transactionData.transactionHistory && transactionData.transactionHistory.monthHistory) ? transactionData.transactionHistory.monthHistory[0] : transactionData;
     switch (true) {
         case transactionType === 'Income':
             income = +income + +amount;
             balance = +income - (+expenses + +investment);
+            monthIncome = +monthIncome + +amount;
+            monthBalance = +monthIncome - (+monthExpenses + +monthInvestment);
             break;
         case transactionType === 'Expenses':
             expenses = +expenses + +amount;
             balance = +income - (+expenses + +investment);
+            monthExpenses = +monthExpenses + +amount;
+            monthBalance = +monthIncome - (+monthExpenses + +monthInvestment);
             break;
         case transactionType === 'Investment':
             investment = +investment + +amount;
             balance = +income - (+expenses + +investment);
+            monthInvestment = +monthInvestment + +amount;
+            monthBalance = +monthIncome - (+monthExpenses + +monthInvestment);
             break;
         default: null;
     }
@@ -55,14 +62,18 @@ const calculateTransaction = (transactionType: String, amount: String, transacti
         income,
         expenses,
         investment,
-        balance
+        balance,
+        monthIncome,
+        monthExpenses,
+        monthInvestment,
+        monthBalance
     };
     return result;
 }
 
 const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: any) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
-    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, {});
+    const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, {});
     const newTransactionData = {
         userId,
         year,
@@ -71,6 +82,10 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
             monthHistory: [
                 {
                     month,
+                    monthIncome,
+                    monthExpenses,
+                    monthInvestment,
+                    monthBalance,
                     dateHistory: [
                         {
                             date,
@@ -93,7 +108,7 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
 
 const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
-    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
+    const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
@@ -104,12 +119,19 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
             expenses,
             investment,
             balance,
-            $push: {
-                'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
-                    transactionCategory,
-                    transactiontype,
-                    amount,
-                    description
+            'transactionHistory.monthHistory.$[monthIndex]': {
+                monthIncome,
+                monthExpenses,
+                monthInvestment,
+                monthBalance,
+                month,
+                $push: {
+                    'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
+                        transactionCategory,
+                        transactiontype,
+                        amount,
+                        description
+                    }
                 }
             }
         },
@@ -122,7 +144,6 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
     if (!savedTransactionData) return { isTransactionAdded: false };
     const result = {
         isTransactionAdded: true,
-        transactionHistory: savedTransactionData.transactionHistory,
         transactionOverview: {
             income: savedTransactionData.income,
             expenses: savedTransactionData.expenses,
@@ -136,7 +157,7 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
 
 const createNewDateInMonth = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
-    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
+    const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
@@ -147,14 +168,23 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
             expenses,
             investment,
             balance,
-            $push: {
-                'transactionHistory.monthHistory.$[monthIndex].dateHistory': {
-                    date,
-                    transactionList: {
-                        transactionCategory,
-                        transactiontype,
-                        amount,
-                        description
+            'transactionHistory.monthHistory.$[monthIndex]': {
+                monthIncome,
+                monthExpenses,
+                monthInvestment,
+                monthBalance,
+                month,
+                $push: {
+                    dateHistory: {
+                        date,
+                        transactionList: [
+                            {
+                                transactionCategory,
+                                transactiontype,
+                                amount,
+                                description
+                            }
+                        ]
                     }
                 }
             }
@@ -181,7 +211,7 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
 
 const createNewMonthInYear = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
-    const { income, expenses, investment, balance } = calculateTransaction(transactiontype, amount, previousData);
+    const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, previousData);
     const savedTransactionData = await TransactionModel.findOneAndUpdate(
         {
             userId,
@@ -194,6 +224,10 @@ const createNewMonthInYear = async (inputData: objectKeys, userId: any, previous
             balance,
             $push: {
                 'transactionHistory.monthHistory': {
+                    monthIncome,
+                    monthInvestment,
+                    monthExpenses,
+                    monthBalance,
                     month,
                     dateHistory: {
                         date,
@@ -255,7 +289,7 @@ export const addTransaction = async (req: Request, res: Response) => {
             let savedData = createNewEnrtyInTransaction(req.body, userId);
             savedData = await TransactionModel.create(savedData);
             const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
-            if (!savedData || transactionData) throw new Error('Error while adding data');
+            if (!savedData || !transactionData) throw new Error('Error while adding data');
             res.status(200).json({
                 status: 'Success',
                 message: 'Transaction added Successfully',
@@ -269,7 +303,21 @@ export const addTransaction = async (req: Request, res: Response) => {
             });
             return;
         }
-        const monthData = await TransactionModel.findOne({ userId: objectTypeUserId, year, 'transactionHistory.monthHistory': { $elemMatch: { month } } });
+        const monthData = await TransactionModel.findOne(
+            {
+                userId: objectTypeUserId, year,
+                'transactionHistory.monthHistory': {
+                    $elemMatch: { month }
+                }
+            },
+            {
+                'income': 1,
+                'expenses': 1,
+                'investment': 1,
+                'balance': 1,
+                'transactionHistory.monthHistory.$': 1
+            }
+        );
         if (monthData) {
             const dateData = await TransactionModel.findOne(
                 {
@@ -285,12 +333,19 @@ export const addTransaction = async (req: Request, res: Response) => {
                             }
                         }
                     }
+                },
+                {
+                    'income': 1,
+                    'expenses': 1,
+                    'investment': 1,
+                    'balance': 1,
+                    'transactionHistory.monthHistory.$': 1
                 }
             );
             if (dateData) {
                 const transactionResult: ValidAndInvalidResult = await addTransactionInfoToDate(req.body, userId, dateData);
                 const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
-                const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
+                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
                 if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
@@ -307,7 +362,7 @@ export const addTransaction = async (req: Request, res: Response) => {
             }
             else {
                 const transactionResult: ValidAndInvalidResult = await createNewDateInMonth(req.body, userId, monthData);
-                const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
+                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
                 const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
                 if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
@@ -325,7 +380,13 @@ export const addTransaction = async (req: Request, res: Response) => {
             }
         }
         else {
-            const transactionResult: ValidAndInvalidResult = await createNewMonthInYear(req.body, userId, userTransactionHistory);
+            const userTransaction = {
+                income: userTransactionHistory.income,
+                expenses: userTransactionHistory.expenses,
+                investment: userTransactionHistory.investment,
+                balance: userTransactionHistory.balance
+            }
+            const transactionResult: ValidAndInvalidResult = await createNewMonthInYear(req.body, userId, userTransaction);
             const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
             const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
             if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');

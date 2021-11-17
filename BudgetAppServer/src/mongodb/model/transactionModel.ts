@@ -31,6 +31,10 @@ const transactionSchema = new Schema({
     transactionHistory: {
         monthHistory: [
             {
+                monthIncome: String,
+                monthExpenses: String,
+                monthInvestment: String,
+                monthBalance: String,
                 month: String,
                 dateHistory: [
                     {
