@@ -79,7 +79,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                     }
                 });
                 if (response && response.data && response.data.status === 'Success') {
-                    const { transactionOverview, transactionDetail } = response.data;
+                    const { transactionOverview, transactionDetail, monthTransactionOverview } = response.data;
                     if (!currentFilterGroupBy && !currentFilterMonth) {
                         dispatch({
                             type: 'SET_TRANSACTION_DATA',
@@ -87,9 +87,14 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         })
                     }
                     dispatch({
+                        type: 'SET_MONTHLY_TRANSACTION_OVERVIEW',
+                        monthTransactionOverview
+                    });
+                    dispatch({
                         type: 'SET_TRANSACTION_OVERVIEW',
                         transactionOverview
-                    })
+                    });
+
                     setApiSuccessMessage('Transaction Added Successfully');
                 }
             }

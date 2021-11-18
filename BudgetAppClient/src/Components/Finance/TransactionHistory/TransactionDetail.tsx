@@ -44,11 +44,29 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
             });
             if (response && response.data && response.data.status === 'Success') {
                 if (response.data.transactionDetail) {
-                    const { transactionDetail } = response.data;
+                    const { transactionDetail, monthTransactionOverview } = response.data;
+                    if (transactionDetail.monthHistory && transactionDetail.monthHistory.length === 0) {
+                        dispatch({
+                            type: 'SET_MONTHLY_TRANSACTION_OVERVIEW',
+                            monthTransactionOverview: {
+                                monthIncome: 0,
+                                monthExpenses: 0,
+                                monthInvestment: 0,
+                                monthBalance: 0
+                            }
+                        });
+                    }
+                    else {
+                        dispatch({
+                            type: 'SET_MONTHLY_TRANSACTION_OVERVIEW',
+                            monthTransactionOverview
+                        });
+                    }
                     dispatch({
                         type: 'SET_TRANSACTION_DATA',
                         transactionData: transactionDetail
                     });
+
                 }
             }
         }

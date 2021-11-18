@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import userInfoReducer from './userInfoReducer';
-import monthlyExpensesReducer from './monthlyReducer';
 import transactionReducer from './transactionReducer';
+import monthlyTransactionReducer from './MonthlyTransactionReducer';
 
 const rootReducer = combineReducers({
     userInfoReducer,
-    monthlyExpensesReducer,
-    transactionReducer
+    transactionReducer,
+    monthlyTransactionReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

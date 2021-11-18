@@ -65,7 +65,7 @@ const TransactionFilter: FC = () => {
 
 
     const renderFilteredOption = (displayName: string | undefined, callback: () => void) => (
-        <div className="col-md-2">
+        <div className="col-6 col-md-2">
             <div className="finance_filter_selected_option_container">
                 <div className="name">{displayName}</div>
                 <CancelIcon
@@ -86,7 +86,9 @@ const TransactionFilter: FC = () => {
                     {
                         currentFilterMonth && renderFilteredOption(FullMonthName[Number(currentFilterMonth)], removeFilterMonth)
                     }
-                    <div className="col-md-2">
+                </div>
+                <div className="row">
+                    <div className="col-6 col-md-2">
                         <div className="finance_filter_custom_dropdown">
                             <div className='finance_filter_custom_dropdown_container' onClick={() => handleCustomDropDown(groupByRef)}>
                                 <input
@@ -108,7 +110,7 @@ const TransactionFilter: FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-6 col-md-2">
                         <div className="finance_filter_custom_dropdown">
                             <div className='finance_filter_custom_dropdown_container' onClick={() => handleCustomDropDown(monthRef)}>
                                 <input

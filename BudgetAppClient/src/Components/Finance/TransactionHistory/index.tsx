@@ -2,6 +2,7 @@ import React, { Fragment, FC, lazy, Suspense } from 'react';
 
 const TransactionHistoryHeader = lazy(() => import('./HistoryHeader'));
 const TransactionFilter = lazy(() => import('./TransactionFilter'));
+const MonthTransaction = lazy(() => import('./MonthTransaction'));
 const TransactionDetail = lazy(() => import('./TransactionDetail'));
 
 type TransactionHistoryProps = {
@@ -22,6 +23,9 @@ const TransactionHistory: FC<TransactionHistoryProps> = (props) => {
             </Suspense>
             <Suspense fallback={<div>Loading...</div>}>
                 <TransactionFilter />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+                <MonthTransaction />
             </Suspense>
             <Suspense fallback={<div>Loading...</div>}>
                 <TransactionDetail
