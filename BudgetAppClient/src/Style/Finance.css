@@ -420,6 +420,42 @@
     display: block;
 }
 
+/* month transaction overview */
+
+.month_transaction_container
+{
+    margin: 10px 0px 10px 0px;
+    padding: 10px 0px;
+    background-color: var(--body-bg);
+}
+.month_transaction_info_container
+{
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: var(--card-bg);
+}
+.month_transaction_info_container .heading
+{
+    color: var(--title-sub-heading);
+    font-size: .850rem;
+    font-weight: 600;
+    letter-spacing: 0.010rem;
+    font-family: var(--font-family-sans-serif);
+}
+.month_transaction_info_container .value
+{
+    padding: 8px 0px 0px 0px;
+    font-size: .950rem;
+    font-weight: 700;
+    letter-spacing: 0.010rem;
+    color: var(--title-heading);
+    font-family: var(--font-family-roboto);
+    transition: 0.4s all ease-in-out;
+}
+
+
 @media(max-width: 450px) {
     .finance_transaction_datail_item {
         padding: 25px 10px;
@@ -439,5 +475,9 @@
         width: 130px;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+    .month_transaction_info_container
+    {
+        margin: 5px 0px;
     }
 } 
