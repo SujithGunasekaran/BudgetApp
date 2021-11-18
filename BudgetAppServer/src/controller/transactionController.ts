@@ -11,7 +11,8 @@ interface objectKeys {
 type ValidAndInvalidResult = {
     isTransactionAdded: boolean,
     transactionHistory?: objectKeys[],
-    transactionOverview?: objectKeys
+    transactionOverview?: objectKeys,
+    monthTransactionOverview?: objectKeys
 }
 
 
@@ -71,6 +72,7 @@ const calculateTransaction = (transactionType: String, amount: String, transacti
     return result;
 }
 
+
 const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: any) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
     const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, {});
@@ -106,6 +108,7 @@ const createNewEnrtyInTransaction = (inputData: { [key: string]: any }, userId: 
     return newTransactionData;
 }
 
+
 const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
     const { income, expenses, investment, balance, monthIncome, monthExpenses, monthInvestment, monthBalance } = calculateTransaction(transactiontype, amount, previousData);
@@ -119,19 +122,18 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
             expenses,
             investment,
             balance,
-            'transactionHistory.monthHistory.$[monthIndex]': {
-                monthIncome,
-                monthExpenses,
-                monthInvestment,
-                monthBalance,
-                month,
-                $push: {
-                    'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
-                        transactionCategory,
-                        transactiontype,
-                        amount,
-                        description
-                    }
+            $set: {
+                'transactionHistory.monthHistory.$[monthIndex].monthIncome': monthIncome,
+                'transactionHistory.monthHistory.$[monthIndex].monthExpenses': monthExpenses,
+                'transactionHistory.monthHistory.$[monthIndex].monthInvestment': monthInvestment,
+                'transactionHistory.monthHistory.$[monthIndex].monthBalance': monthBalance
+            },
+            $push: {
+                'transactionHistory.monthHistory.$[monthIndex].dateHistory.$[dateIndex].transactionList': {
+                    transactionCategory,
+                    transactiontype,
+                    amount,
+                    description
                 }
             }
         },
@@ -144,6 +146,12 @@ const addTransactionInfoToDate = async (inputData: objectKeys, userId: any, prev
     if (!savedTransactionData) return { isTransactionAdded: false };
     const result = {
         isTransactionAdded: true,
+        monthTransactionOverview: {
+            monthIncome,
+            monthExpenses,
+            monthInvestment,
+            monthBalance
+        },
         transactionOverview: {
             income: savedTransactionData.income,
             expenses: savedTransactionData.expenses,
@@ -168,24 +176,23 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
             expenses,
             investment,
             balance,
-            'transactionHistory.monthHistory.$[monthIndex]': {
-                monthIncome,
-                monthExpenses,
-                monthInvestment,
-                monthBalance,
-                month,
-                $push: {
-                    dateHistory: {
-                        date,
-                        transactionList: [
-                            {
-                                transactionCategory,
-                                transactiontype,
-                                amount,
-                                description
-                            }
-                        ]
-                    }
+            $set: {
+                'transactionHistory.monthHistory.$[monthIndex].monthIncome': monthIncome,
+                'transactionHistory.monthHistory.$[monthIndex].monthExpenses': monthExpenses,
+                'transactionHistory.monthHistory.$[monthIndex].monthInvestment': monthInvestment,
+                'transactionHistory.monthHistory.$[monthIndex].monthBalance': monthBalance
+            },
+            $push: {
+                'transactionHistory.monthHistory.$[monthIndex].dateHistory': {
+                    date,
+                    transactionList: [
+                        {
+                            transactiontype,
+                            transactionCategory,
+                            description,
+                            amount
+                        }
+                    ]
                 }
             }
         },
@@ -199,6 +206,12 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
     const result = {
         isTransactionAdded: true,
         transactionHistory: savedTransactionData.transactionHistory,
+        monthTransactionOverview: {
+            monthIncome,
+            monthExpenses,
+            monthInvestment,
+            monthBalance
+        },
         transactionOverview: {
             income: savedTransactionData.income,
             expenses: savedTransactionData.expenses,
@@ -208,6 +221,7 @@ const createNewDateInMonth = async (inputData: objectKeys, userId: any, previous
     }
     return result;
 }
+
 
 const createNewMonthInYear = async (inputData: objectKeys, userId: any, previousData: objectKeys) => {
     const { year, month, date, transactiontype, transactionCategory, amount, description } = inputData;
@@ -250,6 +264,12 @@ const createNewMonthInYear = async (inputData: objectKeys, userId: any, previous
     const result = {
         isTransactionAdded: true,
         transactionHistory: savedTransactionData.transactionHistory,
+        monthTransactionOverview: {
+            monthIncome,
+            monthExpenses,
+            monthInvestment,
+            monthBalance
+        },
         transactionOverview: {
             income: savedTransactionData.income,
             expenses: savedTransactionData.expenses,
@@ -259,6 +279,7 @@ const createNewMonthInYear = async (inputData: objectKeys, userId: any, previous
     }
     return result;
 }
+
 
 const getTransactionDataByMonth = async (objectTypeUserId: any, month: string, year: string) => {
     const transactionData = await TransactionModel.findOne(
@@ -278,6 +299,7 @@ const getTransactionDataByMonth = async (objectTypeUserId: any, month: string, y
     return transactionData;
 }
 
+
 export const addTransaction = async (req: Request, res: Response) => {
     try {
         const { userId } = req.query;
@@ -290,10 +312,17 @@ export const addTransaction = async (req: Request, res: Response) => {
             savedData = await TransactionModel.create(savedData);
             const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
             if (!savedData || !transactionData) throw new Error('Error while adding data');
+            const { monthIncome, monthBalance, monthExpenses, monthInvestment } = savedData.transactionHistory.monthHistory[0];
             res.status(200).json({
                 status: 'Success',
                 message: 'Transaction added Successfully',
                 transactionDetail: transactionData.transactionHistory,
+                monthTransactionOverview: {
+                    monthIncome,
+                    monthExpenses,
+                    monthInvestment,
+                    monthBalance,
+                },
                 transactionOverview: {
                     income: savedData.income,
                     expenses: savedData.expenses,
@@ -345,36 +374,28 @@ export const addTransaction = async (req: Request, res: Response) => {
             if (dateData) {
                 const transactionResult: ValidAndInvalidResult = await addTransactionInfoToDate(req.body, userId, dateData);
                 const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
-                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
+                const { isTransactionAdded, transactionOverview = {}, monthTransactionOverview = {} } = transactionResult;
                 if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
                     message: 'Transaction added Successfully',
                     transactionDetail: transactionData.transactionHistory,
-                    transactionOverview: {
-                        income: transactionOverview.income,
-                        expenses: transactionOverview.expenses,
-                        investment: transactionOverview.investment,
-                        balance: transactionOverview.balance
-                    }
+                    monthTransactionOverview,
+                    transactionOverview
                 });
                 return;
             }
             else {
                 const transactionResult: ValidAndInvalidResult = await createNewDateInMonth(req.body, userId, monthData);
-                const { isTransactionAdded, transactionOverview = {} } = transactionResult;
+                const { isTransactionAdded, transactionOverview = {}, monthTransactionOverview = {} } = transactionResult;
                 const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
                 if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
                 res.status(200).json({
                     status: 'Success',
                     message: 'Transaction added Successfully',
                     transactionDetail: transactionData.transactionHistory,
-                    transactionOverview: {
-                        income: transactionOverview.income,
-                        expenses: transactionOverview.expenses,
-                        investment: transactionOverview.investment,
-                        balance: transactionOverview.balance
-                    }
+                    monthTransactionOverview,
+                    transactionOverview
                 });
                 return;
             }
@@ -387,19 +408,15 @@ export const addTransaction = async (req: Request, res: Response) => {
                 balance: userTransactionHistory.balance
             }
             const transactionResult: ValidAndInvalidResult = await createNewMonthInYear(req.body, userId, userTransaction);
-            const { isTransactionAdded, transactionOverview = {}, transactionHistory } = transactionResult;
+            const { isTransactionAdded, transactionOverview = {}, monthTransactionOverview = {} } = transactionResult;
             const transactionData = await getTransactionDataByMonth(objectTypeUserId, month, year);
             if (!isTransactionAdded || !transactionData) throw new Error('Error while adding Transaction');
             res.status(200).json({
                 status: 'Success',
                 message: 'Transaction added Successfully',
                 transactionDetail: transactionData.transactionHistory,
-                transactionOverview: {
-                    income: transactionOverview.income,
-                    expenses: transactionOverview.expenses,
-                    investment: transactionOverview.investment,
-                    balance: transactionOverview.balance
-                }
+                monthTransactionOverview,
+                transactionOverview
             });
             return;
         }
@@ -440,7 +457,6 @@ export const getTransactionOverview = async (req: Request, res: Response) => {
 }
 
 
-
 export const getTransactionDetail = async (req: Request, res: Response) => {
     try {
         const { year, groupBy, userId, month } = req.query;
@@ -472,70 +488,6 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
                 return;
             }
         }
-        if (!month && groupBy) {
-            transactionData = await TransactionModel.aggregate([
-                {
-                    $match: {
-                        userId: objectTypeUserId,
-                        year
-                    }
-                },
-                {
-                    $project: {
-                        "transactionHistory.monthHistory": {
-                            $map: {
-                                input: {
-                                    $filter: {
-                                        input: "$transactionHistory.monthHistory",
-                                        as: "monthHistory",
-                                        cond: {}
-                                    }
-                                },
-                                as: "monthHistory",
-                                in: {
-                                    month: "$$monthHistory.month",
-                                    dateHistory: {
-                                        $map: {
-                                            input: {
-                                                $filter: {
-                                                    input: "$$monthHistory.dateHistory",
-                                                    as: "dateHistory",
-                                                    cond: {}
-                                                }
-                                            },
-                                            as: "dateHistory",
-                                            in: {
-                                                date: "$$dateHistory.date",
-                                                transactionList: {
-                                                    $filter: {
-                                                        input: "$$dateHistory.transactionList",
-                                                        as: "transactionList",
-                                                        cond: {
-                                                            $eq: [
-                                                                "$$transactionList.transactiontype",
-                                                                groupBy
-                                                            ]
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            ]);
-            if (!transactionData || transactionData.length === 0) {
-                res.status(200).json({
-                    status: 'Success',
-                    message: 'You have not done any transaction for the selected categories.'
-                });
-                return;
-            }
-            transactionData = transactionData[0];
-        }
         if (month && groupBy) {
             transactionData = await TransactionModel.aggregate([
                 {
@@ -563,6 +515,10 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
                                 as: "monthHistory",
                                 in: {
                                     month: "$$monthHistory.month",
+                                    monthIncome: "$$monthHistory.monthIncome",
+                                    monthExpenses: "$$monthHistory.monthExpenses",
+                                    monthInvestment: "$$monthHistory.monthInvestment",
+                                    monthBalance: "$$monthHistory.monthBalance",
                                     dateHistory: {
                                         $map: {
                                             input: {
@@ -599,14 +555,25 @@ export const getTransactionDetail = async (req: Request, res: Response) => {
             if (!transactionData || transactionData.length === 0) {
                 res.status(200).json({
                     status: 'Success',
-                    message: 'You have not done any transaction for the selected month and groupBy'
+                    transactionDetail: {
+                        monthHistory: []
+                    }
                 });
                 return;
             }
             transactionData = transactionData[0];
         }
+        const { monthHistory } = transactionData.transactionHistory;
+        const { monthIncome = 0, monthExpenses = 0, monthInvestment = 0, monthBalance = 0 } = monthHistory.length > 0 ? monthHistory[0] : [{}];
+        const monthTransactionOverview = {
+            monthIncome,
+            monthExpenses,
+            monthInvestment,
+            monthBalance
+        }
         res.status(200).json({
             status: 'Success',
+            monthTransactionOverview,
             transactionDetail: transactionData.transactionHistory
         });
         return;
