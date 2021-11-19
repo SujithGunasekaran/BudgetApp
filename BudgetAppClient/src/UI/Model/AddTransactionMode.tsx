@@ -108,6 +108,7 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                             history.push('/');
                         }, 3000)
                     }
+                    else setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
                 }
                 else setApiErrorMessage('Error while Adding Transaction Please Try agin later!');
             }

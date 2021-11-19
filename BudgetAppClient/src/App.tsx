@@ -6,6 +6,7 @@ import './Style/Header.css';
 import './Style/Finance.css';
 import './Style/messageModel.css';
 import './Style/model.css';
+import './Style/Dashboard.css';
 
 const App: FC = () => {
 
