@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useApiUrl, transactionUrl } from './ApiUrl';
+import { useApiUrl, transactionUrl, dashboardUrl } from './ApiUrl';
 
 const token = sessionStorage.getItem('userToken');
 
@@ -13,6 +13,13 @@ export const userAxios = axios.create({
 
 export const transactionAxios = axios.create({
     baseURL: `${transactionUrl}`,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
+
+export const dashboardAxios = axios.create({
+    baseURL: `${dashboardUrl}`,
     headers: {
         'Content-Type': 'application/json',
     }
