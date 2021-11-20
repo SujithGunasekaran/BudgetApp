@@ -61,29 +61,27 @@ const MonthDashboard: FC<TransactionDashBoardProps> = (props) => {
 
     return (
         <Fragment>
-            <div className="dashboard_month_transaction_container">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                        width={500}
-                        height={300}
-                        data={data}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                    >
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="Income" stroke="#4cbb59" />
-                        <Line type="monotone" dataKey="Expenses" stroke="#ff5a4e" />
-                        <Line type="monotone" dataKey="Investment" stroke="#0068FF" />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                    width={500}
+                    height={300}
+                    data={data}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                >
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="Income" stroke="#4cbb59" />
+                    <Line type="monotone" dataKey="Expenses" stroke="#ff5a4e" />
+                    <Line type="monotone" dataKey="Investment" stroke="#0068FF" />
+                </LineChart>
+            </ResponsiveContainer>
         </Fragment>
     )
 
