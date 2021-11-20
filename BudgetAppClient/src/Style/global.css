@@ -58,6 +58,8 @@
     --card-bg : #1A1E23;
     --card-light-dark : rgb(52, 52, 53);
     --card-border : #1A1E23;
+    --card-highlight-bg : #132541;
+    --card-border-highlight : #0067FF;
     --dropdown-values-bg : #0e1a2e;
     --dropdown-values-color : #0068FF;
     --scroll-border : rgb(109, 108, 108);
