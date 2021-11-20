@@ -1,3 +1,4 @@
+import { currentHalfNameMonth, currentYear } from '../util';
 
 interface objectKeys {
     [key: string]: any
@@ -5,6 +6,7 @@ interface objectKeys {
 
 interface dashboardData {
     date: string | number,
+    displayName: string,
     Income: string | number,
     Expenses: string | number,
     Investment: string | number
@@ -28,6 +30,7 @@ class MonthData {
         for (let i: number = this.startDate; i <= this.endDate; i++) {
             let initialData: dashboardData = {
                 date: String(i),
+                displayName: `${String(i)} ${currentHalfNameMonth} ${currentYear}`,
                 Income: 0,
                 Expenses: 0,
                 Investment: 0
@@ -60,11 +63,11 @@ class MonthData {
 
     #addDataToMonthlyDashboard(monthDate: string, transactionResult: objectKeys) {
         for (let i: number = 0; i < this.monthlyDashboardData.length; i++) {
-            const { date } = this.monthlyDashboardData[i];
+            const { date, displayName } = this.monthlyDashboardData[i];
             const { Income, Expenses, Investment } = transactionResult;
             if (String(date) === monthDate) {
                 this.monthlyDashboardData[i] = {
-                    date,
+                    date, displayName,
                     Income, Expenses, Investment
                 }
             }
@@ -75,16 +78,18 @@ class MonthData {
     #calculateNextStartAndEndDate() {
         let date = new Date();
         let monthLastDate: any = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        let previousStartDate = (+this.startDate > 7) ? (+this.startDate - 7) : 0;
+        let previousEndDate = (+this.endDate > 13) ? (+this.endDate - 7) : 0;
         let nextStartDate = (+monthLastDate - +this.startDate) >= 7 ? +this.startDate + 7 : (+this.startDate + (+monthLastDate - +this.startDate));
         let nextEndDate = (+monthLastDate - +this.endDate) >= 7 ? (+this.endDate + 7) : (+this.endDate + (+monthLastDate - +this.endDate));
-        return { nextStartDate, nextEndDate };
+        return { nextStartDate, nextEndDate, previousStartDate, previousEndDate };
     }
 
 
     getTransactionData() {
         return new Promise((resolve) => {
             this.#constructInitialData();
-            const { nextStartDate, nextEndDate } = this.#calculateNextStartAndEndDate();
+            const { nextStartDate, nextEndDate, previousStartDate, previousEndDate } = this.#calculateNextStartAndEndDate();
             if (this.transactionData.transactionHistory || this.transactionData.transactionHistory.monthHistory.length > 0) {
                 const { dateHistory = [] } = this.transactionData.transactionHistory.monthHistory[0];
                 dateHistory.forEach((element: any) => {
@@ -95,8 +100,8 @@ class MonthData {
                     }
                 });
                 const monthlyDashboardData = {
-                    previousStartDate: this.startDate,
-                    previousEndDate: this.endDate,
+                    previousStartDate,
+                    previousEndDate,
                     nextStartDate,
                     nextEndDate,
                     dashBoardData: this.monthlyDashboardData
@@ -105,8 +110,8 @@ class MonthData {
             }
             else {
                 const monthlyDashboardData = {
-                    previousStartDate: this.startDate,
-                    previousEndDate: this.endDate,
+                    previousStartDate,
+                    previousEndDate,
                     nextStartDate,
                     nextEndDate,
                     dashBoardData: this.monthlyDashboardData
