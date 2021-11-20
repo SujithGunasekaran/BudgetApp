@@ -1,11 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { connectMongodb } from './mongodb';
-import { config } from './config';
 import userRouter from './routes/userRoute';
 import transactionRouter from './routes/transactionRoute';
+import dashboardRoute from './routes/dashboardRoute';
 
-const { LOCAL_URL } = config;
 
 // Initializing server
 const server = express();
@@ -26,6 +25,7 @@ connectMongodb();
 
 server.use('/api/v1/user', userRouter);
 server.use('/api/v1/transaction', transactionRouter);
+server.use('/api/v1/dashboard', dashboardRoute);
 
 server.listen(PORT, () => {
     console.log(`Server Running on PORT : ${PORT}`);
