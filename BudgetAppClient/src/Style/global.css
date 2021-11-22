@@ -71,9 +71,9 @@
     --success-alert-text : #4cbb59;
     --success-alert-bg : rgba(46,160,67,0.1);
     --success-alert-border : rgb(52, 180, 76);
-    --info-alert-text : #00C5FB;
-    --info-alert-border : #17a2b8;
-    --info-alert-bg : rgba(6, 144, 199, 0.1);
+    --info-alert-text : #035ce2;
+    --info-alert-border : #035ce2;
+    --info-alert-bg : #0e1a2e;
     --warning-alert-text : #ffc107;
     --warning-alert-border : #ffc107;
     --warning-alert-bg : rgba(186, 199, 6, 0.1);
