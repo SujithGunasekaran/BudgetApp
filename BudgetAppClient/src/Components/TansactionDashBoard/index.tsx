@@ -1,5 +1,5 @@
 import React, { FC, Fragment, lazy, Suspense, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../ReduxStore/Reducers';
 import { dashboardAxios } from '../../Util/Api';
 import { unstable_batchedUpdates } from 'react-dom';
@@ -20,7 +20,6 @@ type TransactionDashBoardProps = {
 const TransactionDashBoard: FC<TransactionDashBoardProps> = () => {
 
     // react-state
-    const [monthDashboard, setMonthDashboard] = useState<objectKeys[] | []>([]);
     const [startDate, setStartDate] = useState<number>(1);
     const [endDate, setEndDate] = useState<number>(7);
     const [previousStartDate, setPreviousStartDate] = useState<number>(0);
@@ -29,6 +28,10 @@ const TransactionDashBoard: FC<TransactionDashBoardProps> = () => {
 
     // redux-state
     const { userInfo } = useSelector((state: RootState) => state.userInfoReducer);
+    const { monthlyDashboardData: monthDashboard } = useSelector((state: RootState) => state.monthlyTransactionReducer);
+
+    // dispatch
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -38,13 +41,16 @@ const TransactionDashBoard: FC<TransactionDashBoardProps> = () => {
 
 
     const updateState = (monthDashboard: objectKeys) => {
+        const { dashBoardData, nextEndDate, nextStartDate, previousEndDate, previousStartDate } = monthDashboard;
         unstable_batchedUpdates(() => {
-            const { dashBoardData, nextEndDate, nextStartDate, previousEndDate, previousStartDate } = monthDashboard;
             setStartDate(nextStartDate);
             setEndDate(nextEndDate);
             setPreviousStartDate(previousStartDate);
             setPreviousEndDate(previousEndDate);
-            setMonthDashboard(dashBoardData);
+        })
+        dispatch({
+            type: 'SET_MONTHLY_TRANSACTION_DASHBOARD',
+            monthlyDashboardData: dashBoardData
         })
     }
 
@@ -90,19 +96,31 @@ const TransactionDashBoard: FC<TransactionDashBoardProps> = () => {
                     </div>
                     <div className="select_option">
                         {
-                            (+previousStartDate >= 1 && +previousEndDate >= 7) &&
-                            <div className="dashboard_select_option_bg" onClick={() => handlePrevious()}>
-                                <LeftArrowIcon
-                                    cssClass="icon"
-                                />
-                            </div>
+                            !loading &&
+                            <Fragment>
+                                {
+                                    (+previousStartDate >= 1 && +previousEndDate >= 7) &&
+                                    <div className="dashboard_select_option_bg" onClick={() => handlePrevious()}>
+                                        <LeftArrowIcon
+                                            cssClass="icon"
+                                        />
+                                    </div>
+                                }
+                                {
+                                    (+startDate !== +lastDateOfCurrentMonth || +endDate !== +lastDateOfCurrentMonth) &&
+                                    <div className="dashboard_select_option_bg" onClick={() => handleNext()}>
+                                        <RightArrowIcon
+                                            cssClass="icon"
+                                        />
+                                    </div>
+                                }
+                            </Fragment>
                         }
                         {
-                            (+startDate !== +lastDateOfCurrentMonth || +endDate !== +lastDateOfCurrentMonth) &&
-                            <div className="dashboard_select_option_bg" onClick={() => handleNext()}>
-                                <RightArrowIcon
-                                    cssClass="icon"
-                                />
+                            loading &&
+                            <div className="dashboard_loading_message">
+                                <div className="spinner-border" role="status">
+                                </div>
                             </div>
                         }
                     </div>
