@@ -79,7 +79,7 @@ class MonthData {
         let date = new Date();
         let monthLastDate: any = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         let previousStartDate = (+this.startDate > 7) ? (+this.startDate - 7) : 0;
-        let previousEndDate = (+this.endDate > 13) ? (+this.endDate - 7) : 0;
+        let previousEndDate = (+this.endDate > 13) ? (+monthLastDate - +this.startDate) >= 7 ? (+this.endDate - 7) : (+this.startDate - (+monthLastDate - +this.startDate)) : 0;
         let nextStartDate = (+monthLastDate - +this.startDate) >= 7 ? +this.startDate + 7 : (+this.startDate + (+monthLastDate - +this.startDate));
         let nextEndDate = (+monthLastDate - +this.endDate) >= 7 ? (+this.endDate + 7) : (+this.endDate + (+monthLastDate - +this.endDate));
         return { nextStartDate, nextEndDate, previousStartDate, previousEndDate };
