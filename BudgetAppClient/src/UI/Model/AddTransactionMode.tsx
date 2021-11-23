@@ -87,6 +87,13 @@ const AddTransactionModel: FC<TransactionModelProps> = (props) => {
                         })
                     }
                     dispatch({
+                        type: 'UPDATE_MONTHLY_TRANSACTION_DASHBOARD',
+                        monthlyDashboard: {
+                            date,
+                            ...formValue
+                        }
+                    });
+                    dispatch({
                         type: 'SET_MONTHLY_TRANSACTION_OVERVIEW',
                         monthTransactionOverview
                     });
