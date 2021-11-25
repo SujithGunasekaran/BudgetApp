@@ -1,0 +1,21 @@
+.footer_main
+{
+    padding: 20px 0px;
+    border-top: 1px solid var(--footer-border);
+    background-color: var(--body-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer_icon
+{
+    width: 20px;
+    height: 20px;
+    color: var(--title-heading);
+    transition: 0.4s all ease-in-out;
+}
+.footer_icon:hover
+{
+    cursor: pointer;
+    color: var(--title-highlight-dark);
+}
