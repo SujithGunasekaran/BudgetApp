@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import AuthHoc from '../Hoc/Auth';
 
 const TransactionOverView = lazy(() => import('../Components/Finance/TransactionOverview'));
-const TransactionDashBoardView = lazy(() => import('../Components/TansactionDashBoard'));
 const TransactionHistory = lazy(() => import('../Components/Finance/TransactionHistory'));
 
 type FinanceProps = {
@@ -19,13 +18,6 @@ const Finance: FC<FinanceProps> = (props) => {
                     <div className="row">
                         <div className="col-md-12">
                             <TransactionOverView
-                                history={props.history}
-                            />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <TransactionDashBoardView
                                 history={props.history}
                             />
                         </div>
