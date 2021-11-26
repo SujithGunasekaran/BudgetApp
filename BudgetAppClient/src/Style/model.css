@@ -230,6 +230,7 @@
 .model_custom_dropdown_value::placeholder
 {
     font-weight: 400;
+    letter-spacing: 0.015rem;
     color: var(--form-text-placeholder);
 }
 .model_custom_dropdown_icon
