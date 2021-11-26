@@ -16,25 +16,6 @@ type ValidAndInvalidResult = {
 }
 
 
-export const checkIsUserTokenValid = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (req.headers['x-powered-token'] && config.JWTSECRET) {
-            const userToken: any = req.headers['x-powered-token'];
-            const decodedToken = jwt.verify(userToken, config.JWTSECRET);
-            if (!decodedToken) throw new Error('Invalid Token');
-            next();
-        }
-        else throw new Error('Invalid Token');
-    }
-    catch (err) {
-        res.status(404).json({
-            status: 'Failed',
-            message: 'InvalidToken'
-        })
-    }
-}
-
-
 const calculateTransaction = (transactionType: String, amount: String, transactionData: objectKeys) => {
     let { income = 0, expenses = 0, investment = 0, balance = 0 } = transactionData;
     let { monthIncome = 0, monthExpenses = 0, monthInvestment = 0, monthBalance = 0 } = (transactionData.transactionHistory && transactionData.transactionHistory.monthHistory) ? transactionData.transactionHistory.monthHistory[0] : transactionData;
