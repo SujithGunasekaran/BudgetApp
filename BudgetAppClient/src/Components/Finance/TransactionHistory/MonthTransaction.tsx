@@ -1,7 +1,8 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, lazy, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../ReduxStore/Reducers';
 
+const TransactionCard = lazy(() => import('../../../UI/Card/TransactionCard'));
 
 const MonthTransactionOverview: FC = () => {
 
@@ -11,32 +12,15 @@ const MonthTransactionOverview: FC = () => {
     return (
         <Fragment>
             <div className="month_transaction_container">
-                <div className="row">
-                    <div className="col-6 col-sm-3 col-md-3">
-                        <div className="month_transaction_info_container">
-                            <div className="heading">Income</div>
-                            <div className="value">₹ {Number(monthIncome).toLocaleString('en-IN')}</div>
-                        </div>
-                    </div>
-                    <div className="col-6 col-sm-3 col-md-3">
-                        <div className="month_transaction_info_container">
-                            <div className="heading">Expenses</div>
-                            <div className="value">₹ {Number(monthExpenses).toLocaleString('en-IN')}</div>
-                        </div>
-                    </div>
-                    <div className="col-6 col-sm-3 col-md-3">
-                        <div className="month_transaction_info_container">
-                            <div className="heading">Investment</div>
-                            <div className="value">₹ {Number(monthInvestment).toLocaleString('en-IN')}</div>
-                        </div>
-                    </div>
-                    <div className="col-6 col-sm-3 col-md-3">
-                        <div className="month_transaction_info_container">
-                            <div className="heading">Balance</div>
-                            <div className="value">₹ {Number(monthBalance).toLocaleString('en-IN')}</div>
-                        </div>
-                    </div>
-                </div>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <TransactionCard
+                        income={Number(monthIncome)}
+                        expenses={Number(monthExpenses)}
+                        investment={Number(monthInvestment)}
+                        balance={Number(monthBalance)}
+                        column="col-6 col-sm-3 col-md-3"
+                    />
+                </Suspense>
             </div>
         </Fragment>
     )

@@ -38,7 +38,7 @@ const TransactionHistoryHeader: FC<TransactionHistoryHeaderprops> = (props) => {
         <Fragment>
             <div className="finance_top_header_container">
                 <div className="finance_top_header_info_child_one">
-                    <div className="finance_top_header_info_name">History</div>
+                    <div className="finance_top_header_info_name">Month Transaction</div>
                     <div className="finance_top_header_info_sub">Transaction for {currentFilterMonth ? FullMonth[Number(currentFilterMonth)] : FullMonth[monthYearDetail.month]} {monthYearDetail.year}.</div>
                 </div>
                 <div className="finance_top_header_info_child_two">

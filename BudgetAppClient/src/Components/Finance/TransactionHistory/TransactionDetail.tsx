@@ -105,13 +105,16 @@ const TransactionDetail: FC<TransactionDetailProps> = (props) => {
 
     return (
         <Fragment>
-            <div className="row">
-                <div className="col-md-12">
-                    {
-                        apiErrorMessage && renderErrorMessage()
-                    }
+            {
+                apiErrorMessage &&
+                <div className="row">
+                    <div className="col-md-12">
+                        {
+                            renderErrorMessage()
+                        }
+                    </div>
                 </div>
-            </div>
+            }
             <div className="row">
                 <div className="col-md-12">
                     <div className="finance_transaction_detail_container">

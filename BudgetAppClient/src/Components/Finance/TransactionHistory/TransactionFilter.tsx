@@ -1,9 +1,9 @@
 import React, { Fragment, FC, useRef } from 'react';
 import { CancelIcon, DropDownIcon } from '../../../UI/Icon';
-import { transactionType, FullMonthNameList, FullMonthName } from '../../../Util/DropdownInfo';
+import { transactionType, FullMonthName, FullMonthNameList } from '../../../Util/DropdownInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../ReduxStore/Reducers';
-
+import { FullMonth, currentMonthName } from '../../../Util';
 
 const TransactionFilter: FC = () => {
 
@@ -38,7 +38,14 @@ const TransactionFilter: FC = () => {
         }
     }
 
-    const handleFilterMonth = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
+    const handleFilterMonth = (monthIndex: number) => {
+        dispatch({
+            type: 'SET_CURRENT_FILTER_MONTH',
+            filterMonth: monthIndex
+        });
+    }
+
+    const handleMobileFilterMonth = (e: React.MouseEvent<HTMLElement, MouseEvent>, parentRef: { [key: string]: any }) => {
         if (e !== null && e.target instanceof HTMLElement) {
             const element = e.target;
             handleCustomDropDown(parentRef);
@@ -87,13 +94,24 @@ const TransactionFilter: FC = () => {
                         currentFilterMonth && renderFilteredOption(FullMonthName[Number(currentFilterMonth)], removeFilterMonth)
                     }
                 </div>
-                <div className="row">
+                <div className="row" style={{ alignItems: 'center' }}>
+                    <div className="col-md-10 finance_month_list">
+                        <div className="finance_filter_month_container">
+                            {
+                                FullMonth.map((element: string, index: number) => (
+                                    <div onClick={() => handleFilterMonth(index)} key={index} className={`finance_filter_month_name ${!currentFilterMonth ? (currentMonthName === element ? 'active' : '') : (FullMonth[Number(currentFilterMonth)] === element ? 'active' : '')}`}>
+                                        {element}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
                     <div className="col-6 col-md-2">
                         <div className="finance_filter_custom_dropdown">
                             <div className='finance_filter_custom_dropdown_container' onClick={() => handleCustomDropDown(groupByRef)}>
                                 <input
                                     className="model_custom_dropdown_value"
-                                    placeholder="Group By"
+                                    placeholder="Filter"
                                     readOnly
                                     value={currentFilterGroupBy || ''}
                                 />
@@ -110,7 +128,7 @@ const TransactionFilter: FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-6 col-md-2">
+                    <div className="col-6 col-md-2 mobile_filter_month">
                         <div className="finance_filter_custom_dropdown">
                             <div className='finance_filter_custom_dropdown_container' onClick={() => handleCustomDropDown(monthRef)}>
                                 <input
@@ -125,7 +143,7 @@ const TransactionFilter: FC = () => {
                                 {
                                     FullMonthNameList.map((monthInfo, index) => {
                                         return (
-                                            <div key={index} data-value={monthInfo.value} onClick={(e) => handleFilterMonth(e, monthRef)} className="model_custom_dropdown_item">{monthInfo.displayValue}</div>
+                                            <div key={index} data-value={monthInfo.value} onClick={(e) => handleMobileFilterMonth(e, monthRef)} className="model_custom_dropdown_item">{monthInfo.displayValue}</div>
                                         )
                                     })
                                 }

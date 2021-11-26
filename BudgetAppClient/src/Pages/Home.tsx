@@ -2,8 +2,8 @@ import React, { FC, Fragment, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router';
 import AuthHoc from '../Hoc/Auth';
 
+const TransactionOverview = lazy(() => import('../Components/TransactionOverview'));
 const MonthDashboard = lazy(() => import('../Components/TansactionDashBoard/monthDashboard'));
-const MonthIncomeDashboard = lazy(() => import('../Components/TansactionDashBoard/monthIncome'));
 
 interface objectKeys {
     [key: string]: any
@@ -24,6 +24,13 @@ const Home: FC<HomeProps> = (props) => {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-12">
+                            <TransactionOverview
+                                history={history}
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <MonthDashboard
                                     history={history}
@@ -33,11 +40,7 @@ const Home: FC<HomeProps> = (props) => {
                     </div>
                     <div className="row">
                         <div className="col-md-6">
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <MonthIncomeDashboard
-                                    history={history}
-                                />
-                            </Suspense>
+
                         </div>
                     </div>
                 </div>

@@ -5,15 +5,18 @@ interface objectKey {
 
 const date = new Date();
 
+export const FullMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 export const currentDateValue = date.getDate();
 
 export const currentMonthValue = date.getMonth();
 
 export const currentYearValue = date.getFullYear();
 
+export const currentMonthName = FullMonth[currentMonthValue];
+
 export const lastDateOfCurrentMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-export const FullMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export const formValidation = (objectKeys: string[], formData: objectKey, errorStateSetter: any) => {
 
