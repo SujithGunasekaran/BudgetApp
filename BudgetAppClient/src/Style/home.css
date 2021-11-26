@@ -2,3 +2,79 @@
 {
     padding: 25px 0px;
 }
+
+
+/* month category */
+
+
+/* header start */
+
+
+.category_header_container
+{
+    width: 100%;
+    margin: 20px 0px 30px 0px;
+}
+.category_header_name
+{
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.015rem;
+    color: var(--title-light);
+    font-family: var(--font-family-roboto);
+}
+
+
+/* header end */
+
+
+/* category filter start */
+
+
+.category_filter_container
+{
+    width: 100%;
+    padding: 5px 0px 15px 0px;
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+}
+.category_filter_item
+{
+    width: 150px;
+    padding: 12px 0px;
+    margin: 0px 10px 0px 0px;
+    text-align: center;
+    border-radius: 10px;
+    font-family: var(--font-family-roboto);
+    font-size: .940rem;
+    letter-spacing: 0.015rem;
+    color: var(--title-heading);
+    background-color: var(--card-dark-bg);
+    transition: 0.4s all ease-in-out;
+}
+.category_filter_item:hover
+{
+    cursor: pointer;
+    background-color: var(--container-light-blue-bg);
+    color: var(--text-highlight-dark);
+}
+.category_filter_item.active
+{
+    background-color: var(--container-light-blue-bg);
+    color: var(--text-highlight-dark);
+}
+
+
+/* category filter end */
+
+
+
+/* category data start */
+
+.category_data_container
+{
+    margin: 25px 0px;
+}
+
+/* category data end */

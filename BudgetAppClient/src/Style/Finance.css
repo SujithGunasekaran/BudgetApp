@@ -302,33 +302,6 @@
     font-family: var(--font-family-sans-serif);
 }
 
-.finance_transaction_detail_container::-webkit-scrollbar,
-.finance_filter_month_container::-webkit-scrollbar
-{
-    width: 5px;
-    height: 5px;
-    border-radius: 0px;
-    background-color: var(--card-dark-bg);
-}
-
-.finance_transaction_detail_container::-webkit-scrollbar-track,
-.finance_filter_month_container::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-    -webkit-border-radius: 10px;
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    border-radius: 0px;
-}
-
-.finance_transaction_detail_container::-webkit-scrollbar-thumb,
-.finance_filter_month_container::-webkit-scrollbar-thumb
-{
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background-color: var(--scroll-border); 
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-}
 .finance_transaction_detail_month_container
 {
     margin: 0px;
