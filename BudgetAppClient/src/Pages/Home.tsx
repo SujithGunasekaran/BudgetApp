@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import AuthHoc from '../Hoc/Auth';
 
 const TransactionOverview = lazy(() => import('../Components/TransactionOverview'));
-const MonthDashboard = lazy(() => import('../Components/TansactionDashBoard/monthDashboard'));
+const CategoryDashboard = lazy(() => import('../Components/CategoryDashboard'));
 
 interface objectKeys {
     [key: string]: any
@@ -29,20 +29,11 @@ const Home: FC<HomeProps> = (props) => {
                             />
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <MonthDashboard
-                                    history={history}
-                                />
-                            </Suspense>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-
-                        </div>
-                    </div>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <CategoryDashboard
+                            history={history}
+                        />
+                    </Suspense>
                 </div>
             </div>
         </Fragment>

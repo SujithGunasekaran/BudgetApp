@@ -1,13 +1,17 @@
-import React, { FC, } from 'react';
+import React, { FC } from 'react';
 import {
     LineChart,
     Line,
     XAxis,
     YAxis,
+    CartesianGrid,
     Tooltip,
+    Legend,
+    Brush,
+    AreaChart,
+    Area,
     ResponsiveContainer,
 } from 'recharts';
-
 
 const data = [
     {
@@ -25,15 +29,37 @@ const data = [
     {
         name: 'Page C',
         uv: 2000,
-        pv: 9800,
+        pv: 8,
         amt: 2290,
-    }
+    },
+    {
+        name: 'Page D',
+        uv: 2780,
+        pv: 3908,
+        amt: 2000,
+    },
+    {
+        name: 'Page E',
+        uv: 18,
+        pv: 4800,
+        amt: 2181,
+    },
+    {
+        name: 'Page F',
+        uv: 2390,
+        pv: 3800,
+        amt: 2500,
+    },
+    {
+        name: 'Page G',
+        uv: 3490,
+        pv: 4300,
+        amt: 2100,
+    },
 ];
 
 
-
-
-const PieChartDashboard: FC = () => {
+const PieChartComponent: FC = () => {
 
     return (
         <ResponsiveContainer width="100%" height="100%">
@@ -56,8 +82,6 @@ const PieChartDashboard: FC = () => {
             </LineChart>
         </ResponsiveContainer>
     );
-
 }
 
-
-export default PieChartDashboard;
+export default PieChartComponent;
