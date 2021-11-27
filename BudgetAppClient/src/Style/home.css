@@ -76,5 +76,52 @@
 {
     margin: 25px 0px;
 }
+.category_card_container
+{
+    margin: 10px 0px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+}
+.category_card_header
+{
+    display: flex;
+    align-items: center;
+}
+.category_card_header > .info
+{
+    display: flex;
+    flex-direction: column;
+}
+.category_card_header_name
+{
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
+    color: var(--title-light);
+    font-family: var(--font-family-roboto);
+}
+.category_card_header_value_bg
+{
+    margin-left: auto;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: var(--success-alert-bg);
+}
+.category_card_header_value
+{
+    font-size: .980rem;
+    font-weight: 500;
+    color: var(--success-alert-text);
+    font-family: var(--font-family-roboto);
+}
+.category_card_header_info_value
+{
+    padding-top: 8px;
+    font-size: .850rem;
+    font-weight: 500;
+    color: var(--title-sub-heading);
+    font-family: var(--font-family-roboto);
+}
 
 /* category data end */
