@@ -1,6 +1,6 @@
 import React, { FC, Fragment, lazy, Suspense } from 'react';
 
-const PieChat = lazy(() => import('../../UI/Chart/PieChart'));
+const LineChart = lazy(() => import('../../UI/Chart/LineChart'));
 
 
 interface objectKeys {
@@ -17,7 +17,7 @@ const MonthCategories: FC<MonthCategoriesProps> = (props) => {
         <Fragment>
             <Suspense fallback={<div>Loading...</div>}>
                 <div className="dashboard_month_sub_transaction_container">
-                    <PieChat />
+                    <LineChart />
                 </div>
             </Suspense>
         </Fragment>
