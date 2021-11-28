@@ -52,3 +52,86 @@ export const getMonthTransactionOverview = async (req: Request, res: Response) =
         })
     }
 }
+
+
+export const getTransactioDataForCategory = async (req: Request, res: Response) => {
+    try {
+        const { userId, year, month, category } = req.query;
+        const userInfoId: any = userId;
+        const userObjectId = new mongoose.Types.ObjectId(userInfoId);
+        const transactionData: any = await TransactionModel.aggregate([
+            {
+                $match: {
+                    userId: userObjectId,
+                    year
+                }
+            },
+            {
+                $project: {
+                    "transactionHistory.monthHistory": {
+                        $map: {
+                            input: {
+                                $filter: {
+                                    input: "$transactionHistory.monthHistory",
+                                    as: "monthHistory",
+                                    cond: {
+                                        $eq: [
+                                            "$$monthHistory.month",
+                                            month
+                                        ]
+                                    }
+                                }
+                            },
+                            as: "monthHistory",
+                            in: {
+                                month: "$$monthHistory.month",
+                                monthIncome: "$$monthHistory.monthIncome",
+                                monthExpenses: "$$monthHistory.monthExpenses",
+                                monthInvestment: "$$monthHistory.monthInvestment",
+                                monthBalance: "$$monthHistory.monthBalance",
+                                dateHistory: {
+                                    $map: {
+                                        input: {
+                                            $filter: {
+                                                input: "$$monthHistory.dateHistory",
+                                                as: "dateHistory",
+                                                cond: {}
+                                            }
+                                        },
+                                        as: "dateHistory",
+                                        in: {
+                                            date: "$$dateHistory.date",
+                                            transactionList: {
+                                                $filter: {
+                                                    input: "$$dateHistory.transactionList",
+                                                    as: "transactionList",
+                                                    cond: {
+                                                        $eq: [
+                                                            "$$transactionList.transactiontype",
+                                                            category
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]);
+        if (!transactionData || transactionData.length === 0) throw new Error('Error while getting transaction');
+        res.status(200).json({
+            status: 'Success',
+            transactionData: transactionData[0]
+        })
+    }
+    catch (err: any) {
+        res.status(404).json({
+            status: 'Failed',
+            message: 'Error while getting transaction data'
+        })
+    }
+}
