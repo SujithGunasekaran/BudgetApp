@@ -95,6 +95,7 @@
 {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
+    margin: 15px 0px;
     padding: 25px 20px;
     border-radius: 10px;
 }

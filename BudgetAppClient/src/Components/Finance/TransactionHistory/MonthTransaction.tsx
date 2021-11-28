@@ -18,7 +18,7 @@ const MonthTransactionOverview: FC = () => {
                         expenses={Number(monthExpenses)}
                         investment={Number(monthInvestment)}
                         balance={Number(monthBalance)}
-                        column="col-6 col-sm-3 col-md-3"
+                        column="col-md-3"
                     />
                 </Suspense>
             </div>
